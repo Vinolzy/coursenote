@@ -27,3 +27,12 @@
 | **Machine Vision**     | Refers to the application of imaging technologies in industrial settings for tasks like quality control.（指在工业环境中应用图像技术进行质量控制等任务） |
 | **Computer Vision**    | Describes a computer's ability to interpret and understand visual information, similar to human vision.（描述计算机解释和理解视觉信息的能力，类似人类视觉） |
 
+其它：
+
+- **Recognition**：识别，指在图像中确定特定对象或模式的身份，如人脸识别或物体识别。
+
+- **Segmentation**：分割，指将图像划分为不同的区域，每个区域对应不同的对象或背景，用于进一步的分析或处理。
+
+- **Classification**：分类，指根据图像的特征将其归类到预定义的类别中，比如把图片分为“猫”或“狗”。
+
+- **Detection**：检测，指在图像中定位和标注目标对象，通常会给出对象的边界框或具体位置。

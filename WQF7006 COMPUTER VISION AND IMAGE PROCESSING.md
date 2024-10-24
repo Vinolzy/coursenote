@@ -1,4 +1,5 @@
 
+
 # 1 Introduction to CV
 
 - **Image Acquisition**：图像处理的第一步，用于确定数字图像的来源。
@@ -105,7 +106,7 @@ $Gray=0.299×R+0.587×G+0.114×B$
 
 - 直方图
 
-   是图像中像素值的统计图，显示每个像素值（通常从 0 到 255）出现的频率。它帮助我们了解图像的亮度分布。
+  是图像中像素值的统计图，显示每个像素值（通常从 0 到 255）出现的频率。它帮助我们了解图像的亮度分布。
 
   - **x 轴**：表示像素值的范围（0 表示黑色，255 表示白色）。
   - **y 轴**：表示每个像素值在图像中出现的次数（频率）。
@@ -130,7 +131,7 @@ $Gray=0.299×R+0.587×G+0.114×B$
 
 - 傅里叶变换
 
-   可以帮助我们分析图像中的频率分布：
+  可以帮助我们分析图像中的频率分布：
 
   - **高频**：图像中变化剧烈的部分，如边缘、噪声。高频代表快速变化的细节。
   - **低频**：图像中变化平缓的部分，如平滑的区域。低频代表图像的整体结构或背景。
@@ -646,7 +647,10 @@ img_back = np.abs(img_back)
 
 - `np.abs()`：由于傅里叶逆变换的结果可能是复数，所以通过取绝对值将其转换为实数图像。
 
+
+
 # 3 IMAGE SEGMENTATION(Color Image Processing)
+
 ## 3.1 Color Image Processing (彩色图像处理)
 
 **Electromagnetic Spectrum (电磁波谱)**
@@ -727,3 +731,272 @@ img_back = np.abs(img_back)
 **RGB-based Segmentation (基于RGB的分割)**
 
 - 使用 **颜色距离** 在RGB空间中进行分割，通常通过 **阈值** 控制，分割出与目标颜色最接近的像素。
+
+
+
+## 3.6 HSV,HSI,HSL色彩空间模型区别
+
+1. **HSV（Hue, Saturation, Value）色彩空间**
+
+- **H（色调）**：表示颜色的种类，范围是 0 到 360 度。0 度代表红色，120 度代表绿色，240 度代表蓝色。
+- **S（饱和度）**：表示颜色的纯度，范围是 0 到 1。0 代表灰色，1 代表纯色。
+- **V（亮度）**：表示颜色的明亮程度，范围是 0 到 1。0 是黑色，1 是最亮的颜色。
+
+**HSV 的应用**：常用于计算机图形设计和图像处理，因为它与人的色彩感知更接近，可以方便地调整颜色的亮度或饱和度。
+
+2. **HSI（Hue, Saturation, Intensity）色彩空间**
+
+- **H（色调）**：与 HSV 中的色调含义相同，表示颜色的种类，范围是 0 到 360 度。
+- **S（饱和度）**：表示颜色的纯度，范围是 0 到 1。0 代表灰色，1 代表纯色。
+- **I（强度）**：表示颜色的整体亮度，范围是 0 到 1。与 HSV 的亮度不同，HSI 的强度是 RGB 三个分量的平均值，代表颜色的总能量。
+
+**HSI 的应用**：适合用于图像处理中的灰度图像转换以及色彩分析，因为它更好地分离了色调与强度。
+
+3. **HSL（Hue, Saturation, Lightness）色彩空间**
+
+- **H（色调）**：与 HSV 和 HSI 中的色调含义相同，范围是 0 到 360 度。
+- **S（饱和度）**：表示颜色的纯度，范围是 0 到 1。
+- **L（亮度）**：表示颜色的明暗程度，范围是 0 到 1。0 是黑色，1 是白色。L 是通过颜色中的最亮和最暗分量计算出来的。
+
+**HSL 的应用**：HSL 常用于设计工具，尤其是网页设计，因其可以直观地调节亮度和饱和度。
+
+**区别总结：**
+
+- **HSV**：侧重于颜色的亮度调整，适合在设计中通过调整 V（亮度）来改变颜色的明暗。
+- **HSI**：强调颜色的总亮度，适合用于图像处理，特别是在灰度化和颜色信息提取中。
+- **HSL**：通过 L（亮度）表现颜色的明暗，L 值比 HSV 的 V 更容易理解，适合用于设计工作中的颜色调配。
+
+
+
+## 3.7 作业代码分析
+
+### 3.7.1 HSV-1
+
+```
+# to run in google colab
+import sys
+
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+
+if "google.colab" in sys.modules:
+
+    def download_from_web(url):
+        import requests
+
+        response = requests.get(url)
+        if response.status_code == 200:
+            with open(url.split("/")[-1], "wb") as file:
+                file.write(response.content)
+        else:
+            raise Exception(
+                f"Failed to download the image. Status code: {response.status_code}"
+            )
+
+    download_from_web(
+        "https://github.com/YoniChechik/AI_is_Math/raw/master/c_02a_basic_image_processing/grass.jpg"
+    )
+    download_from_web(
+        "https://github.com/YoniChechik/AI_is_Math/raw/master/c_02a_basic_image_processing/hsv_th.png"
+    )
+
+figsize = (10, 10)
+```
+
+**检查是否在 Google Colab 中运行**：
+
+- `if "google.colab" in sys.modules` 这行代码检查当前 Python 环境是否在 Google Colab 中。如果是，它会运行内部定义的功能。
+
+**定义下载函数**：
+
+- `download_from_web(url)` 函数用于从网络上下载图片。它使用 `requests` 库从指定的 URL 获取内容，并将其保存为本地文件。
+- 如果请求成功 (`status_code == 200`)，它将下载的内容写入文件。文件名由 URL 中的最后一部分确定（即 URL 中最后一个 `/` 之后的部分）。
+- 如果下载失败（即状态码不为 200），它会抛出一个异常并显示状态码。
+
+**下载图像**：
+
+- 调用了 `download_from_web` 函数，下载了两张图像文件：`grass.jpg` 和 `hsv_th.png`
+
+**设置图像大小**：
+
+- `figsize = (10, 10)` 这一行设置了绘制图像时的图像大小，单位为英寸（图像的宽度和高度均为 10 英寸）。
+
+----
+
+接下来显示图片：
+
+```
+bgr_im = cv2.imread("grass.jpg")
+rgb_im = cv2.cvtColor(bgr_im, cv2.COLOR_BGR2RGB)
+plt.figure(figsize=figsize)
+plt.imshow(rgb_im)
+plt.title("original image")
+plt.show()
+```
+
+-----------
+
+我们想要将草地和天空分离。我们将通过遮罩掉图像中所有非绿色的像素来实现这一点。首先，找到 HSV 格式的绿色。
+
+```
+rgb_green = np.uint8([[[0, 255, 0]]])  # 这是一个三维数组，因为 cvtColor 需要这样的格式…
+hsv_green = cv2.cvtColor(rgb_green, cv2.COLOR_RGB2HSV)[0, 0, :]
+print(hsv_green)
+```
+
+- 代码使用 OpenCV 函数 `cvtColor` 将纯绿色的 RGB 值 `[0, 255, 0]` 转换为 HSV（色调-饱和度-亮度）格式。`cvtColor` 期望输入是一个 3D 数组，因此构建了一个包含 RGB 值的 3D 数组。转换后的 HSV 颜色会输出为 `[hue, saturation, value]`，即绿色的 HSV 值。
+
+--------------
+
+接下来，将图像转换为 HSV 格式并仅针对绿色及其相邻色进行阈值处理。
+
+我们将使用色调 (hue) 阈值范围为 +30 和 -70（因为它远离蓝色-天空）。我们将使用绿色的所有饱和度 (saturation) 和亮度 (value) 变体。在该阈值范围内遮罩所有像素，应该只剩下草地部分。
+
+```
+# Convert BGR to HSV
+hsv_im = cv2.cvtColor(rgb_im, cv2.COLOR_RGB2HSV)
+
+# define range of hue and intensity
+lower_th = hsv_green - np.array([70, 200, 200])
+upper_th = hsv_green + np.array([30, 0, 0])
+
+# Threshold the HSV image
+mask = cv2.inRange(hsv_im, lower_th, upper_th)
+
+plt.figure(figsize=figsize)
+plt.imshow(mask)
+plt.title("resulted mask")
+plt.show()
+```
+
+- 首先将输入图像 `rgb_im` 从 RGB 颜色空间转换为 HSV（色调-饱和度-亮度）颜色空间。这种转换的目的是为了更好地处理颜色，因为在 HSV 空间中，色调 (hue) 直接表示颜色，饱和度 (saturation) 和亮度 (value) 表示颜色的强度和光度，适合颜色过滤和分割。
+- `lower_th` 和 `upper_th` 分别定义了 HSV 图像的下限和上限，用于进行绿色的阈值处理。
+  - `lower_th = hsv_green - np.array([70, 200, 200])`：减去的值设定了色调、饱和度和亮度的下限。`70` 是色调 (hue) 的范围，允许一定的偏差以捕捉不同强度的绿色；`200` 的饱和度和亮度较高，以确保绿色部分不会太暗。
+  - `upper_th = hsv_green + np.array([30, 0, 0])`：加的值设定了绿色的上限，色调的范围是 `+30`，确保捕捉到绿色的变体，同时允许其他参数保持。
+
+- 通过 `cv2.inRange` 函数对图像进行阈值处理。`inRange` 会生成一个二值遮罩图像，在指定的阈值范围内的像素值被标记为白色 (255)，而不在范围内的像素值标记为黑色 (0)。换句话说，所有在绿色范围内的像素会保留（作为白色区域），其他像素将被滤除（黑色区域）。
+
+位与操作，这样最终的结果 `rgb_res` 只保留了绿色区域的像素值，而其他部分则被设置为黑色
+
+```
+# Trick: apply 2d mask on 3d image
+rgb_res = cv2.bitwise_and(rgb_im, rgb_im, mask=mask)
+
+plt.figure(figsize=figsize)
+plt.imshow(rgb_res)
+plt.title("output image")
+plt.show()
+```
+
+
+
+### 3.7.2 HSV-2
+
+```
+import matplotlib.pyplot as plt
+import numpy as np
+
+from skimage.io import imread, imshow
+from skimage.color import rgb2hsv, rgb2gray
+from skimage.exposure import histogram, cumulative_distribution
+from skimage.filters import threshold_otsu
+```
+
+- `matplotlib.pyplot` 用于图像或数据的可视化；
+- `numpy` 用于处理数据数组；
+- `skimage.io` 提供图像的输入输出操作；
+- `skimage.color` 用于图像的颜色空间转换；
+- `skimage.exposure` 用于处理图像的像素值分布；
+- `skimage.filters` 提供了图像的过滤和阈值处理工具。
+
+--------------
+
+读取图像，并转换为灰度图像
+
+```
+url = "https://thumbs.dreamstime.com/b/yellow-red-balloons-10992473.jpg"
+sail = imread(url)
+imshow(sail)
+sail_gray = rgb2gray(sail)
+imshow(sail_gray)
+```
+
+----
+
+接下来定义了一个阈值 `th`，其值为 `0.4`。这个阈值用于将灰度图像进行二值化处理。灰度图像中的每个像素值都是介于 `0`（黑色）到 `1`（白色）之间的小数值，因此这里的阈值 `0.4` 表示我们要将亮度小于 `0.4` 的像素作为“黑色”，而亮度大于等于 `0.4` 的像素作为“白色”。
+
+```
+th = 0.4
+sail_gray_bw = sail_gray<th
+imshow(sail_gray_bw)
+```
+
+-------------
+
+接下来将一张彩色的 RGB 图像转换为 HSV 颜色空间，然后在一个图形上以灰度图的形式分别显示图像的三个通道（色调、饱和度和亮度）。通过这样分解图像的颜色信息，可以清晰地看到图像中颜色的分布、强度和亮度。
+
+```
+sail_hsv = rgb2hsv(sail)
+# 使用 plt.subplots 创建一个包含 1 行 3 列的子图 (ax) 布局。宽 12 英寸，高 4 英寸。
+fig, ax = plt.subplots(1, 3, figsize=(12,4))
+ax[0].imshow(sail_hsv[:,:,0], cmap='gray')
+ax[0].set_title('Hue')
+ax[1].imshow(sail_hsv[:,:,1], cmap='gray')
+ax[1].set_title('Saturation')
+ax[2].imshow(sail_hsv[:,:,2], cmap='gray')
+ax[2].set_title('Value');
+```
+
+- 使用 `rgb2hsv(sail)` 将 RGB 图像 `sail` 转换为 HSV 颜色空间。
+- `sail_hsv[:, :, 0]` 选择 HSV 图像的第一个通道，即色调（Hue）。这会显示图像中每个像素的颜色类型（色调）。
+  - `cmap='gray'` 将色调以灰度图像的形式显示，以便更直观地查看各个像素的色调分布。
+
+- S(饱和度)和V(亮度)同H(色调)
+
+---
+
+接下来显示色调（Hue）通道并使用 HSV 颜色映射：
+
+```
+plt.imshow(sail_hsv[:, :, 0], cmap='hsv')
+plt.colorbar()
+```
+
+- `sail_hsv[:, :, 0]` 表示 HSV 图像的第一个通道，即 **Hue（色调）**，这是用来表示图像中颜色类型的通道，取值范围一般在 0 到 1 之间。
+
+- `cmap='hsv'` 指定了使用 **HSV 颜色映射**，而不是常规的灰度图。这样可以更直观地表示色调通道中的颜色信息：每个像素的数值将被映射到对应的颜色（根据 HSV 色彩模型）。
+
+- `plt.colorbar()` 添加一个**颜色条**，显示色调通道的数值范围和相应的颜色。这对理解图像中的颜色值非常有帮助。
+  - 颜色条会显示 HSV 色彩空间中的颜色如何映射到不同的色调值。色条上，通常从 0（对应红色）到 1（再回到红色），中间包含黄色、绿色、青色、蓝色和紫色等颜色。
+
+------------
+
+下面代码首先创建一个mask，用于筛选 HSV 色彩空间中色调在 **0 到 0.1** 之间的像素（接近红色）。然后通过这个遮罩，只保留了原图中这些色调范围的区域，并将其余部分遮罩为黑色。最终，代码显示了一个仅包含接近红色的区域的图像，其他区域变为黑色。
+
+- 后面的代码选取色调为黄色/黑色的代码类似，不再重复解释
+
+```
+lower_mask = sail_hsv[:, :, 0] > 0
+upper_mask = sail_hsv[:, :, 0] < 0.1
+mask = upper_mask * lower_mask
+plt.imshow(mask)
+red = sail[:, :, 0] * mask
+green = sail[:, :, 1] * mask
+blue = sail[:, :, 2] * mask
+sail_masked = np.dstack((red, green, blue))
+imshow(sail_masked)
+```
+
+- **lower_mask**：选取色调大于 0 的像素。
+
+- **upper_mask**：选取色调小于 0.1 的像素。
+- **mask**：只有在某个像素同时满足 `upper_mask` 和 `lower_mask` 的条件时（即色调值在 0 到 0.1 之间），该像素的值才为 `True`。否则，值为 `False`。
+- **red, green, blue**：应用遮罩到 RGB 通道，非遮罩区域变为 0。
+- **sail_masked**：组合 RGB 通道，显示遮罩后的图像，只有接近红色的部分保留，其余为黑色。
+  - `np.dstack((red, green, blue))` 使用 `dstack` 将应用遮罩后的 `red`、`green` 和 `blue` 通道沿深度维度组合成一个新的 3D RGB 图像。
+
+
+
+
+

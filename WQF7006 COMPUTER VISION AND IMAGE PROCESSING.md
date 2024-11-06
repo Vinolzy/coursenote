@@ -1099,10 +1099,42 @@ PPT中基于Machine Learning的相关原理在7015中有讲解，这里不再赘
 # 5 OBJECT DETECTION AND RECOGNITION
 
 具体内容略，参考7015的CNN内容。
+<font color=blue>**Quiz：Relu和Sigmoid的区别**</font>
+
+1. **ReLU（Rectified Linear Unit）**  
+   - **定义**：ReLU函数的定义是$$ f(x) = \max(0, x) $$，即输出为输入值和0之间的较大值。
+   - **特性**：  
+     - 非线性：尽管看起来很简单，ReLU能够引入非线性，使网络能够学习复杂的特征。
+     - 稀疏性：当输入为负时，ReLU输出为0，这会导致部分神经元“关闭”，提高网络的稀疏性，从而在一定程度上防止过拟合。
+     - 计算效率：计算相对简单，梯度为1或0，不会导致梯度爆炸问题。
+   - **适用场景**：  
+     - **卷积神经网络（CNN）**：ReLU在CNN中被广泛使用，特别是在隐藏层，因为它帮助模型更有效地学习图像特征。
+     - **深层神经网络**：ReLU可以有效解决深层网络中的梯度消失问题。
+
+2. **Sigmoid**  
+   - **定义**：Sigmoid函数的定义是 $$ f(x) = \frac{1}{1 + e^{-x}} $$，输出值在0和1之间。
+   - **特性**：  
+     - 非线性：Sigmoid也是一个非线性激活函数。
+     - 平滑曲线：Sigmoid的输出在0到1之间，非常适合用于概率预测。
+     - 梯度消失：在极端值（即接近0或1）时，Sigmoid的梯度趋向于0，可能导致梯度消失问题，尤其是在深层网络中。
+     - 在反向传播过程中，梯度逐层向后传播。如果梯度值过小，每层的梯度会在传播中逐渐衰减，接近于零。这样一来，早期层的梯度几乎无法更新，导致模型无法有效学习这些层中的参数。
+   - **适用场景**：  
+     - **输出层**：Sigmoid通常用于二分类任务的输出层，将输出值限制在0到1之间，便于解释为概率。
+     - **浅层网络**：Sigmoid更适合较浅的网络，因为在深层网络中更容易发生梯度消失。
+
+**什么时候使用ReLU和Sigmoid**
+
+- **ReLU**：在卷积神经网络的隐藏层中，通常选择ReLU作为激活函数，因为它计算简单、能缓解梯度消失问题且效果好。
+- **Sigmoid**：在输出层，尤其是二分类任务中，经常使用Sigmoid将结果映射到0到1之间，方便表示为概率。对于多分类任务，通常会使用Softmax而非Sigmoid。
+
+**Summary**
+
+- **ReLU** is widely used in hidden layers of CNNs due to its efficiency and ability to mitigate gradient vanishing issues, which is essential for learning complex features.
+- **Sigmoid** is mainly used in the output layer of binary classification tasks to represent probabilities, as its output range [0, 1] is suitable for this purpose.
+
+In short, **ReLU** is preferred in CNN hidden layers, while **Sigmoid** is used in binary classification output layers.
 
 ## 5.1 CNN代码解析
-
-# 3. Convolutional Neural Networks
 
 在上一部分中，我们构建并训练了一个简单的模型来分类ASL（美式手语）图像。虽然模型在训练数据集上表现出了较高的准确率，但在验证数据集上的表现并不理想。这种无法很好地推广到非训练数据的现象称为**过拟合**。在本节中，我们将引入一种特别适合处理图像和分类任务的模型——卷积神经网络（CNN）。
 

@@ -1096,4 +1096,276 @@ imshow(sail_masked)
 
 PPT中基于Machine Learning的相关原理在7015中有讲解，这里不再赘述。
 
+# 5 OBJECT DETECTION AND RECOGNITION
+
+具体内容略，参考7015的CNN内容。
+
+## 5.1 CNN代码解析
+
+# 3. Convolutional Neural Networks
+
+在上一部分中，我们构建并训练了一个简单的模型来分类ASL（美式手语）图像。虽然模型在训练数据集上表现出了较高的准确率，但在验证数据集上的表现并不理想。这种无法很好地推广到非训练数据的现象称为**过拟合**。在本节中，我们将引入一种特别适合处理图像和分类任务的模型——卷积神经网络（CNN）。
+
+- 针对CNN对数据进行预处理
+- 创建一个更复杂的CNN模型，了解更多的模型层
+- 训练CNN模型并观察其性能
+
+```python
+import torch.nn as nn
+import pandas as pd
+import torch
+from torch.optim import Adam
+from torch.utils.data import Dataset, DataLoader
+
+# 检测是否使用GPU
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+torch.cuda.is_available()
+```
+
+<font color=blue>**Loading and Preparing the Data**</font>
+
+首先，让我们像前一节一样加载数据框架：
+
+```
+from google.colab import drive
+drive.mount('/content/drive')
+
+# 读取训练和验证数据
+train_df = pd.read_csv("/content/drive/MyDrive/Dataset_Assignment_3/sign_mnist_train.csv")
+valid_df = pd.read_csv("/content/drive/MyDrive/Dataset_Assignment_3/sign_mnist_valid.csv")
+```
+
+ASL数据已展平成一维格式。
+
+```
+sample_df = train_df.head().copy()  # 获取前5行数据
+sample_df.pop('label')  # 移除标签列
+sample_x = sample_df.values  # 获取图像数据
+sample_x
+```
+
+在这种格式下，我们无法获得像素之间的邻接关系信息，因此无法应用卷积来检测特征。让我们将数据集重新调整为28x28像素格式，以便卷积层能够关联像素组并检测重要特征。
+
+注意，对于模型的第一卷积层，我们需要提供图像的高度和宽度，还需要颜色通道数。我们的图像是灰度图像，因此通道数为1。
+
+这意味着我们需要将当前形状从 (5, 784) 转换为 (5, 1, 28, 28)。使用NumPy数组时，可以通过传入 -1 来保持某个维度不变。
+
+```
+IMG_HEIGHT = 28
+IMG_WIDTH = 28
+IMG_CHS = 1
+
+sample_x = sample_x.reshape(-1, IMG_CHS, IMG_HEIGHT, IMG_WIDTH)
+sample_x.shape
+```
+
+**Create a Dataset**
+
+接下来，我们将上面的步骤添加到自定义的数据集类 `MyDataset` 中。
+
+```
+class MyDataset(Dataset):
+    def __init__(self, base_df):
+        x_df = base_df.copy()  # 部分操作将直接在原数据上进行
+        y_df = x_df.pop('label')
+        x_df = x_df.values / 255  # 归一化数据，将值从0到255映射到0到1之间
+        x_df = x_df.reshape(-1, IMG_CHS, IMG_WIDTH, IMG_HEIGHT)
+        self.xs = torch.tensor(x_df).float().to(device)
+        self.ys = torch.tensor(y_df).to(device)
+
+    def __getitem__(self, idx):
+        x = self.xs[idx]
+        y = self.ys[idx]
+        return x, y
+
+    def __len__(self):
+        return len(self.xs)
+```
+
+**Create a DataLoader**
+
+接下来，让我们从数据集中创建 `DataLoader`。
+
+```
+BATCH_SIZE = 32
+
+train_data = MyDataset(train_df)
+train_loader = DataLoader(train_data, batch_size=BATCH_SIZE, shuffle=True)
+train_N = len(train_loader.dataset)
+
+valid_data = MyDataset(valid_df)
+valid_loader = DataLoader(valid_data, batch_size=BATCH_SIZE)
+valid_N = len(valid_loader.dataset)
+```
+
+**检验 DataLoader**
+
+让我们从 `DataLoader` 中获取一个批次，以确保它正常工作。
+
+```
+batch = next(iter(train_loader))
+```
+
+**Creating a Convolutional Model**
+
+如今，许多数据科学家在开始项目时会借鉴类似项目的模型结构。假设问题并不完全独特，那么很有可能已经有人创建了效果不错的模型，并发布在像TensorFlow Hub和NGC Catalog这样的在线资源库中。今天我们将提供一个适合该问题的模型。
+
+- Input -> Convolution -> Max Pooling -> Convolution -> Dropout -> Max Pooling -> Convolution -> Max Pooling -> Dense -> Dense -> Output
+
+我们在课程中介绍了不同类型的层，这里将复习它们，并提供相关的文档链接。有疑问时，请参考官方文档。
+
+```python
+n_classes = 24
+kernel_size = 3
+flattened_img_size = 75 * 3 * 3
+
+model = nn.Sequential(
+    # 第一卷积层
+    nn.Conv2d(IMG_CHS, 25, kernel_size, stride=1, padding=1),  # 25 x 28 x 28
+    nn.BatchNorm2d(25),
+    nn.ReLU(),
+    nn.MaxPool2d(2, stride=2),  # 25 x 14 x 14
+    # 第二卷积层
+    nn.Conv2d(25, 50, kernel_size, stride=1, padding=1),  # 50 x 14 x 14
+    nn.BatchNorm2d(50),
+    nn.ReLU(),
+    nn.Dropout(.2),
+    nn.MaxPool2d(2, stride=2),  # 50 x 7 x 7
+    # 第三卷积层
+    nn.Conv2d(50, 75, kernel_size, stride=1, padding=1),  # 75 x 7 x 7
+    nn.BatchNorm2d(75),
+    nn.ReLU(),
+    nn.MaxPool2d(2, stride=2),  # 75 x 3 x 3
+    # Flatten至全连接层
+    nn.Flatten(),
+    nn.Linear(flattened_img_size, 512),
+    nn.Dropout(.3),
+    nn.ReLU(),
+    nn.Linear(512, n_classes)
+)
+```
+
+**Conv2D**
+
+这些是二维卷积层。小的卷积核会在输入图像上滑动，检测分类所需的重要特征。模型中的早期卷积层会检测简单的特征，如边缘；后续的卷积层则会识别更复杂的特征。
+
+<img src="https://github.com/Vinolzy/coursenote/blob/main/resource/conv2D.png?raw=true" alt="con2d">
+
+
+我们来看看第一个 `Conv2D` 层的结构：
+
+```
+nn.Conv2d(IMG_CHS, 25, kernel_size, stride=1, padding=1)
+```
+
+- `25` 表示要学习的滤波器（过滤器）数量。
+- `kernel_size=3`，PyTorch 会自动假设我们想要 `3 x 3` 的滤波器。
+- `stride=1` 表示滤波器在图像上滑动时的步长。
+- `padding=1` 决定输出图像是否与输入图像的尺寸一致。
+
+**BatchNormalization**
+
+与输入归一化类似，批量归一化对隐藏层中的值进行缩放，以改善训练效果。更多细节可以在文档中查看。关于批量归一化层的最佳位置有不同的观点。
+
+**MaxPool2D**
+
+最大池化将图像“缩小”为较低分辨率。这样做有助于模型在物体发生平移（左右移动）时保持鲁棒性，并且加快模型的处理速度。
+
+- 比如4x4缩放为2x2，取四个里的最高像素
+
+**Dropout**
+
+Dropout 是一种防止过拟合的技术。Dropout 随机选择一部分神经元，将其“关闭”，使它们在当前的前向传播或反向传播中不参与计算。这有助于确保网络的鲁棒性和冗余性，不会过分依赖某个特定区域来得出结论。
+
+**Flatten**
+
+Flatten 将一层的多维输出展平为一维数组。展平后的输出被称为特征向量，将作为输入连接到最终的分类层。
+
+**Linear**
+
+在之前的模型中，我们已经见过线性全连接层。第一个全连接层（512个单元）接收特征向量作为输入，学习哪些特征有助于特定分类。第二个全连接层（24个单元）是最终的分类层，输出模型的预测结果。
+
+<font color=blue>**Summarizing the Model**</font>
+
+虽然信息量很大，但不用担心，现在并不需要完全理解所有细节才能有效地训练卷积模型。最重要的是我们知道卷积神经网络可以帮助从图像中提取有用的信息，并且能够用于分类任务。
+
+```python
+model = torch.compile(model.to(device))
+```
+
+由于我们要解决的问题（ASL图像分类）没有变化，因此我们将继续使用相同的损失函数和准确率度量方式。
+
+```
+loss_function = nn.CrossEntropyLoss()
+optimizer = Adam(model.parameters())
+
+def get_batch_accuracy(output, y, N):
+    pred = output.argmax(dim=1, keepdim=True)
+    correct = pred.eq(y.view_as(pred)).sum().item()
+    return correct / N
+```
+
+**Training the Model**
+
+尽管模型的架构有了很大的不同，但训练的方式基本保持不变。
+
+```
+def validate():
+    loss = 0
+    accuracy = 0
+	# 启用模型的评估模式，通常在验证或测试模型时调用
+    model.eval()
+    with torch.no_grad():
+        for x, y in valid_loader:
+            output = model(x)
+
+            loss += loss_function(output, y).item()
+            accuracy += get_batch_accuracy(output, y, valid_N)
+    print('Valid - Loss: {:.4f} Accuracy: {:.4f}'.format(loss, accuracy))
+
+def train():
+    loss = 0
+    accuracy = 0
+
+    model.train()
+    for x, y in train_loader:
+        output = model(x)
+        optimizer.zero_grad()
+        batch_loss = loss_function(output, y)
+        batch_loss.backward()
+        optimizer.step()
+
+        loss += batch_loss.item()
+        accuracy += get_batch_accuracy(output, y, train_N)
+    print('Train - Loss: {:.4f} Accuracy: {:.4f}'.format(loss, accuracy))
+```
+
+**训练循环**
+
+设定训练的轮数为20，每一轮都会运行 `train()` 和 `validate()` 函数，打印出每一轮的损失和准确率。
+
+```
+epochs = 20
+
+for epoch in range(epochs):
+    print('Epoch: {}'.format(epoch))
+    train()
+    validate()
+```
+
+<font color=blue>**Summary**</font>
+
+在本节中，我们使用了多种新的层来实现卷积神经网络（CNN），相较于上一节中使用的简单模型，该模型表现更好。希望通过本节内容，创建和训练一个模型的整体流程会变得更加熟悉。
+
+**Clear the Memory**
+
+在继续进行下一步之前，请执行以下代码单元来关闭 IPython 内核，从而释放 GPU 资源
+
+```python
+import IPython
+app = IPython.Application.instance()
+app.kernel.do_shutdown(True)
+```
+
+
 

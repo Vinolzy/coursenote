@@ -618,8 +618,179 @@ Shapley 值计算过程中涉及特征组合的排列，以确保计算的全面
 
 
 
+## 3.4 Propagation-based explanations
+
+### 3.4.1 Layerwise Relevance Propagation (LRP)
+
+**Layer-wise Relevance Propagation (LRP)** 展示了逐层相关性传播方法的工作原理，用于解释深度学习模型的预测。LRP 是一种解释机器学习模型预测的方法，特别适用于深度神经网络，通过逐层传播相关性来识别哪些输入特征对最终的分类结果影响最大。以下是对图中内容的总结：
+
+**输入图像**：图的左侧展示了一个输入图像，在示例中可能是一张包含动物或其他对象的图片。
+
+**模型预测**：输入图像通过深度神经网络进行处理，模型输出对不同类别的预测概率。
+
+**相关性传播过程**：LRP 从神经网络的输出层开始，将相关性分数逐层反向传播回去，一直到输入层。每一层中的每个神经元（或特征）都会根据其对输出的贡献获得一个相关性分数。
+
+**逐层传播计算**：每一层的相关性分数会根据不同的规则进行分配，通常使用以下公式：
+$$
+R_j = \sum_i \frac{a_j w_{ji}}{\sum_j a_j w_{ji}} R_i
+$$
+其中，$$ R_j $$ 表示第 $$ j $$ 个神经元的相关性分数，$$ w_{ji} $$ 表示连接权重，$$ a_j $$ 表示第 $$ j $$ 个神经元的激活值。LRP 的目的是在各层之间传播相关性分数，最终在输入层生成一个相关性热图，展示对预测最有贡献的像素或特征。
+
+**生成解释（相关性热图）**：通过逐层相关性传播，最终在输入图像上生成一个 **热图**，显示哪些区域对模型的预测结果贡献最大。热图中的红色区域表示对模型预测有正贡献的区域，蓝色区域表示负贡献区域。这样用户可以看到模型关注的图像部分，从而更好地理解预测背后的逻辑。
+
+**主要优势**：直观可解释性：LRP 生成的热图使得用户可以直观地理解模型关注的区域。层级贡献分析：通过逐层传播，可以看到每层网络对最终结果的贡献，使得深度网络的决策过程更加透明。适用于深度神经网络：特别适合解释复杂的深度学习模型。
+
+**应用场景**：LRP 常用于图像分类、对象识别等深度学习应用中，以帮助用户理解模型的预测依据。
+
+---
+
+- **直观性欠佳**：相比其他方法，LRP 的直观性较弱，并且需要一些启发式选择，例如选择哪种“规则”来分配相关性，这可能会让解释结果更加复杂。
+- **适应性较差**：LRP 在不同的神经网络架构上可能难以适用，特别是在有不同结构的模型中。
+- **示例**：例如，LRP 并不自动支持残差连接（如 ResNet 架构），在应用到变压器（transformer）模型时也需要进行扩展和修改。
+
+<font color=blue>**例子：Layerwise Relevance Propagation (LRP) on MRI Data**</font>
+
+图像展示了 LRP 应用于 MRI （脑肿瘤图像）脑部扫描图像，以解释深度学习模型如何识别不同类型的脑肿瘤。示例中的 MRI 图像包括 **胶质瘤**（Glioma）和 **脑膜瘤**（Meningioma）两种肿瘤类型。LRP 生成的热图展示了模型对不同肿瘤类型关注的区域，帮助解释模型的决策依据。
+
+**数据集来源** 
+数据集存储在 GitHub 仓库中，链接展示了脑肿瘤分类数据集的位置。数据集包含 MRI 图像，分为训练集和测试集，用于训练和评估分类模型。
+
+**项目文件结构** 
+展示了数据集的文件夹结构，包括 **glioma_tumor**、**meningioma_tumor** 等类别的文件夹，每个文件夹中包含对应类别的 MRI 图像。该结构有助于理解数据的组织方式，以便更方便地加载数据并用于模型训练。
+
+**代码实现** 
+代码主要展示了 LRP 方法的实现，代码文件位于 GitHub 中的 $$xai-series/05\_lrp.py$$。代码包含导入库、数据预处理、模型加载及 LRP 解释方法的实现。这些代码帮助将 LRP 应用到 MRI 图像分类任务中，以生成可解释性结果。
+
+**代码运行界面** 
+最后展示了在 IDE 中运行代码的界面，可以看到 LRP 解释生成的热图以及模型输出的结果。热图展示了模型在图像上关注的区域，使得用户可以直观地理解模型如何进行分类。
+
+### 3.4.2 Gradient-based explanations
+
+**Application to XAI** 
+
+- **Idea**：找到在扰动时导致输出变化较大的特征。 
+- **Remark**：该方法量化特征敏感性，但不一定与特征移除相关。
+
+**Vanilla Gradients** 
+对于输入 $$ x $$ 和标签 $$ y $$，计算预测 $$ f_y(x) $$ 的梯度：
+$$
+a_i = \frac{\partial f_y}{\partial x_i}(x)
+$$
+可以选择使用绝对值：
+$$
+a_i = \left|\frac{\partial f_y}{\partial x_i}(x)\right|
+$$
+
+**Variant 1: SmoothGrad** 
+计算输入附近的梯度平均值。例如，添加高斯噪声：
+$$
+a_i = \mathbb{E}_{\epsilon}\left[\frac{\partial f_y}{\partial x_i}(x + \epsilon)\right] \quad \text{where} \quad \epsilon \sim \mathcal{N}(0, \sigma^2)
+$$
+实际中，使用少量采样（50次），并需调节 $$ \sigma $$ 到适当水平。
+
+**Variant 2: Integrated Gradient** 
+梯度可能饱和，即使对重要输入也产生小梯度。模型对大输入变化敏感，但对小变化不敏感。 
+
+- **Idea**：通过计算重缩放图像的梯度来解决饱和问题：
+
+$$
+x'(\alpha) = \bar{x} + \alpha(x - \bar{x}) \quad \text{for } 0 \leq \alpha \leq 1
+$$
+
+在重缩放图像范围内积分（平均）梯度：
+$$
+a_i = (x_i - \bar{x}_i) \int_0^1 \frac{\partial f_y(x'(\alpha))}{\partial x_i} d\alpha
+$$
+
+**GradCAM** 
+在卷积神经网络（CNN）中，隐藏层表示高层视觉概念，隐藏层保留了因卷积结构而得的空间信息。 
+
+- **Idea**：通过最后的卷积层而非输入层来解释模型。
+
+**GradCAM Results** 
+图示展示了 GradCAM 的结果。不同颜色表示模型关注的区域，从而直观显示模型决策时关注的图像部分。
 
 
+### 3.4.3 Propagation vs. removal-based explanations
 
+**Many explanation methods**  
 
-## 3.4 基于传播的解释，分析模型对小变化的敏感度
+- **Removal-based explanations**: 包括 SHAP、LIME、RISE、Occlusion、Permutation Tests。  
+- **Propagation-based explanations**: 包括 SmoothGrad、IntGrad、GradCAM。  
+- **实践选择**: 该使用哪种方法取决于特定需求和模型类型。
+
+---
+
+**Model flexibility**  
+
+- **你在解释哪种模型？**  
+  - **Removal-based explanations** 是模型无关的，可以应用于各种模型（如 CNNs、Trees 等）。  
+  - **Propagation-based explanations** 主要用于神经网络，通常需要计算导数，有时还对模型架构有特定要求。
+
+---
+
+**Data flexibility**  
+
+- **你有哪种类型的数据？**  
+  - **Removal-based explanations** 可以处理离散和连续特征数据，例如，适用于数据集中具有不同值的缺失特征。  
+  - **Propagation-based explanations** 更适合连续特征，能很好地捕捉输入特征的微小变化。
+
+---
+
+**Local or global**  
+
+- **你需要哪种类型的解释？**  
+  - 两种方法都可以生成局部解释。  
+  - **Removal-based methods** 更适合全局解释，关注整体模型行为（如特征重要性）。  
+  - 对于 **Propagation-based methods**，如果需要全局解释，则需将局部解释汇总。
+
+---
+
+**Speed**  
+
+- **速度是否重要？**  
+  - **Propagation-based methods** 更快，因为只需反向传播一次，与特征数量依赖性弱。  
+  - **Removal-based methods** 通常较慢，因为需多次进行预测，尤其是 SHAP 等方法。
+
+---
+
+**Quality**  
+
+- **哪个解释最具信息性或正确性？**  
+  - 理论上可以作为指导，但也可以采取经验方法来衡量解释质量。  
+  - **Perspective**: 无解释是完美的，但一些方法可能与用户问题不完全匹配。
+
+---
+
+**Popular methods**  
+
+- **哪些方法最受欢迎？**  
+  - 只有少数几种方法占主导地位，取决于数据领域（表格、图像、自然语言处理等）。
+
+---
+
+**Tabular data**  
+
+- **Permutation tests** 广泛用于全局特征重要性。  
+- **SHAP** 在局部解释中很流行，例如 **TreeSHAP** 内置于 XGBoost 和 LGBM 中，**KernelSHAP** 则用于其他模型。
+
+---
+
+**Computer vision**  
+
+- **GradCAM** 和 **IntGrad** 在视觉领域最流行。  
+- **Removal-based methods** 通常较慢。  
+- 一些论文在尝试改进，但尚未流行。
+
+---
+
+**NLP**  
+
+- 自然语言处理模型（如 LSTMs、Transformers）可以使用大多数解释方法。  
+- **Gradient-based methods** 较流行，**Removal-based explanations** 较慢，但偶尔会用留一法（Occlusion）。  
+- 对于 Transformers，可使用注意力作为解释。
+
+---
+
+**Popular packages** 
+列出了一些流行的解释包，例如 **shap**、**lime**、**captum**、**innvestigate** 等，并展示了其 GitHub 星标数，说明其受欢迎程度。

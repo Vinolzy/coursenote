@@ -386,3 +386,286 @@ A* 是一种领先的路径搜索算法，用于找到从起点到目标的最�
 
 - 单枝的直接传上去
 - 是从左到右一个一个来的，不要一下把所有叶子算完
+
+
+# 4 KNOWLEDGE REPRESENTATION & REASONING
+
+**Introduction（介绍）**
+
+- **Knowledge Representation (KR)（知识表示）** - 将复杂的现实世界信息转化为AI系统可利用的格式，从而模拟“智能”行为的方法。
+- **Significance of KR（KR的意义）**
+  - 提供必要的信息基础，促进智能决策。
+  - 作为推理的前提——使AI具备推理和决策的能力。
+- **Knowledge Reasoning（知识推理）** - AI系统从存储的知识中得出新结论的过程。涉及逻辑推理、推断规则和决策制定。
+
+**What to Represent（表示什么）**
+
+- **Object（对象）**: 关于我们世界领域中对象的所有事实。例如，吉他有琴弦，小号是铜管乐器。
+- **Events（事件）**: 事件是发生在我们世界中的行为。
+- **Performance（表现）**: 描述涉及如何做事情的知识的行为。
+- **Meta-knowledge（元知识）**: 是关于我们所知道的知识。
+- **Facts（事实）**: 是关于现实世界的真实情况和我们所表示的内容。
+- **Knowledge-Base（知识库）**: 知识型代理的核心组件是知识库，表示为**KB**。知识库是**句子**的集合（这里，句子作为一个技术术语使用，与英语语言中的句子并不相同）。
+
+## 4.1 Types of knowledge
+
+**Type 1: Declarative Knowledge（类型 1：陈述性知识）**
+
+- 陈述性知识是指对某事物的了解。（Declarative knowledge is to know about something.）
+- 它包括概念、事实和对象。（It includes concepts, facts, and objects.）
+- 它也称为描述性知识，并以陈述句表达。（It is also called descriptive knowledge and expressed in declarative sentences.）
+- 它比程序性语言更简单。（It is simpler than procedural language.）
+
+**Type 2: Procedural Knowledge（类型 2：程序性知识）**
+
+- 也称为指令性知识。（It is also known as imperative knowledge.）
+- 程序性知识是指知道如何做某事的知识。（Procedural knowledge is a type of knowledge that is responsible for knowing how to do something.）
+- 它可以直接应用于任何任务。（It can be directly applied to any task.）
+- 它包括规则、策略、程序、议程等。（It includes rules, strategies, procedures, agendas, etc.）
+- 程序性知识取决于它可以应用的任务。（Procedural knowledge depends on the task on which it can be applied.）
+
+**Type 3: Meta-knowledge（类型 3：元知识）**
+
+- 关于其他知识类型的知识称为元知识。（Knowledge about the other types of knowledge is called Meta-knowledge.）
+
+**Type 4: Heuristic Knowledge（类型 4：启发式知识）**
+
+- 启发式知识是指某个领域或学科中一些专家的知识。（Heuristic knowledge is representing knowledge of some experts in a field or subject.）
+- 启发式知识是基于过去经验的经验法则、对方法的认知，具有一定效果但不能保证。（Heuristic knowledge is rules of thumb based on previous experiences, awareness of approaches, and which are good to work but not guaranteed.）
+
+**Type 5: Structural Knowledge（类型 5：结构性知识）**
+
+- 结构性知识是解决问题的基本知识。（Structural knowledge is basic knowledge to problem-solving.）
+- 它描述了各种概念之间的关系，如类别、部分和分组。（It describes relationships between various concepts such as kind of, part of, and grouping of something.）
+- 它描述了概念或对象之间存在的关系。（It describes the relationship that exists between concepts or objects.）
+
+---
+
+**AI Knowledge Cycle（人工智能知识循环）**
+
+- 一个人工智能系统具有以下组件来展示智能行为：（An Artificial intelligence system has the following components for displaying intelligent behavior:）
+  - **感知（Perception）**
+  - **学习（Learning）**
+  - **知识表示和推理（Knowledge Representation and Reasoning）**
+  - **规划（Planning）**
+  - **执行（Execution）**
+
+在这一循环中，感知数据进入系统，通过学习过程被处理，然后通过知识表示来存储并用于推理。推理的结果用于规划，最终执行相应的行动。（In this cycle, perception data enters the system, is processed through learning, then stored in knowledge representation for reasoning. The reasoning results are used for planning, leading to the execution of actions.）
+
+
+
+## 4.2 Approaches to Knowledge Representation
+
+**1. Simple Relational Knowledge（简单关系知识）**
+
+- 这是使用关系方法存储事实的最简单方式，每个关于对象的事实都系统地以列的形式展示。（It is the simplest way of storing facts which uses the relational method, and each fact about a set of objects is set out systematically in columns.）
+- 这种知识表示方法在数据库系统中很有名，表示不同实体之间的关系。（This approach of knowledge representation is famous in database systems where the relationship between different entities is represented.）
+- 这种方法几乎没有推理的机会。（This approach has little opportunity for inference.）
+
+**2. Inheritable Knowledge（可继承知识）**
+
+- 在可继承知识方法中，所有数据都必须存储在类的层级结构中。（In the inheritable knowledge approach, all data must be stored in a hierarchy of classes.）
+- 所有类应按一般形式或层次结构排列。（All classes should be arranged in a generalized form or a hierarchical manner.）
+- 在这种方法中，我们应用继承属性。（In this approach, we apply inheritance property.）
+- 元素从类的其他成员继承值。（Elements inherit values from other members of a class.）
+- 这种方法包含可继承知识，显示实例与类之间的关系，称为实例关系。（This approach contains inheritable knowledge which shows a relation between instance and class, and it is called instance relation.）
+- 每个独立的框架都可以表示属性及其值的集合。（Every individual frame can represent the collection of attributes and its value.）
+- 在这种方法中，对象和值用方框表示。（In this approach, objects and values are represented in boxed nodes.）
+- 使用箭头从对象指向其值。（We use arrows which point from objects to their values.）
+
+**3. Inferential Knowledge（推理知识）**
+
+- 推理知识方法以形式逻辑的形式表示知识。（Inferential knowledge approach represents knowledge in the form of formal logic.）
+- 这种方法可以用于推导更多的事实。（This approach can be used to derive more facts.）
+- 它保证正确性。（It guarantees correctness.）
+- 示例：假设有两个陈述：
+  - Marcus 是一个男人（Marcus is a man）
+  - 所有男人都是凡人（All men are mortal）
+- 它可以表示为：
+  - man(Marcus)
+  - $$\forall x = man(x) \rightarrow mortal(x)$$
+
+**4. Procedural Knowledge（程序性知识）**
+
+- 程序性知识方法使用小程序和代码来描述如何做特定的事情以及如何进行。（Procedural knowledge approach uses small programs and codes which describe how to do specific things, and how to proceed.）
+- 在这种方法中，使用了一个重要规则，即If-Then规则。（In this approach, one important rule is used which is the If-Then rule.）
+- 在这种知识中，可以使用LISP语言和Prolog语言等各种编程语言。（In this knowledge, we can use various coding languages such as LISP language and Prolog language.）
+- 我们可以通过这种方法轻松表示启发式或领域特定知识。（We can easily represent heuristic or domain-specific knowledge using this approach.）
+- 但并不一定能表示所有情况。（But it is not necessary that we can represent all cases in this approach.）
+
+
+
+## 4.3 Techniques of Knowledge Representation
+
+**1. Logical Representation（逻辑表示）**
+
+- **语法**：语法规则决定了如何在逻辑中构建合法的句子，确定在知识表示中使用的符号以及如何书写这些符号。（Syntaxes are the rules that decide how we can construct legal sentences in the logic. It determines which symbol we can use in knowledge representation and how to write those symbols.）
+- **语义**：语义规则帮助我们在逻辑中解释句子，包含给每个句子分配含义的过程。（Semantics are the rules by which we can interpret the sentence in the logic. Semantic also involves assigning a meaning to each sentence.）
+- 逻辑表示主要分为两种逻辑：命题逻辑和谓词逻辑。（Logical representation can be categorized into mainly two logics: Propositional Logics and Predicate Logics.）
+
+**2. Semantic Networks（语义网络）**
+
+- 这种表示主要包含两种关系类型：IS-A关系（继承关系）和种类关系。（This representation consists of mainly two types of relations: IS-A relation (Inheritance) and Kind-of-relation.）
+- 示例：以下是一些需要以节点和弧的形式表示的陈述。（Example: The following are some statements that we need to represent in the form of nodes and arcs.）
+  - Jerry 是一只猫（Jerry is a cat）
+  - Jerry 是哺乳动物（Jerry is a mammal）
+  - Jerry 被 Priya 拥有（Jerry is owned by Priya）
+  - Jerry 是棕色的（Jerry is brown colored）
+  - 所有哺乳动物都是动物（All mammals are animals）
+
+**3. Frame Representation（框架表示）**
+
+- 包含属性集合及其值，用于描述世界中的一个实体。（Consists of a collection of attributes and its values to describe an entity in the world.）
+- **面**：槽的各个方面称为面，面是框架的特征，允许对框架施加约束。（Facets: The various aspects of a slot are known as facets. Facets are features of frames which enable us to put constraints on the frames.）
+- 示例：当需要某个特定槽的数据时调用IF-NEEDED事实。（Example: IF-NEEDED facts are called when data of any particular slot is needed.）
+- 框架也称为槽-过滤知识表示。（A frame is also known as slot-filter knowledge representation.）
+
+**4. Production Rules（产生式规则）**
+
+- 产生式规则系统由（条件，动作）对组成，表示“如果条件满足，则执行动作”。（Production rules system consists of (condition, action) pairs which mean "If condition then action".）
+- 主要包括三个部分：
+  - **产生式规则集** - 检查条件，如果条件存在，则触发产生式规则并执行相应的动作。（The set of production rules - checks for the condition and if the condition exists then production rule fires and corresponding action is carried out.）
+  - **工作记忆** - 包含问题解决当前状态的描述，规则可以将知识写入工作记忆中。（Working Memory - contains the description of the current state of problem-solving and rule can write knowledge to the working memory.）
+  - **识别-行动循环** - 规则的条件部分确定可应用于问题的规则，动作部分执行相关的步骤。（The recognize-act-cycle - The condition part of the rule determines which rule may be applied to a problem. And the action part carries out the associated problem-solving steps.）
+- 示例规则：
+  - 如果在车站且公交车到达，则执行动作（上车）。（IF (at bus stop AND bus arrives) THEN action (get into the bus)）
+  - 如果在公交车且已付费且有空座，则执行动作（坐下）。（IF (on the bus AND paid AND empty seat) THEN action (sit down)）
+  - 如果在公交车且未付费，则执行动作（支付车费）。（IF (on bus AND unpaid) THEN action (pay charges)）
+  - 如果公交车到达目的地，则执行动作（下车）。（IF (bus arrives at destination) THEN action (get down from the bus)）
+
+
+
+## 4.4 First Order Logic (FOL)
+
+**First-order Logic (FOL)（一阶逻辑）**
+
+- 一阶逻辑也被称为谓词逻辑或一阶谓词逻辑。（First-order logic is also known as Predicate logic or First-order predicate logic.）
+- 一阶逻辑不仅假设世界包含事实，还假设以下内容存在于世界中：
+  - **对象**：如A、B、人、数字、颜色、战争、理论、正方形、坑等。（Objects: A, B, people, numbers, colors, wars, theories, squares, pits, etc.）
+  - **关系**：可以是单一关系（如红色、圆形、邻接），或是n元关系（如姐妹、兄弟、拥有关联、介于之间）。（Relations: It can be unary relation such as red, round, is adjacent, or n-any relation such as the sister of, brother of, has color, comes between.）
+  - **函数**：如父亲、最好的朋友、第三局、结束等。（Function: Father of, best friend, third inning of, end of, etc.）
+- 作为一种自然语言，一阶逻辑也有两个主要部分：语法和语义。（As a natural language, first-order logic also has two main parts: Syntax and Semantics.）
+
+**Syntax of FOL（FOL的语法）**
+
+- FOL的语法确定了哪些符号的集合是逻辑表达式。（The syntax of FOL determines which collection of symbols is a logical expression in first-order logic.）
+- 以下是FOL语法的基本元素：
+  - 常量、变量、谓词、函数、连接词、量词、等价性等。（Constants, Variables, Predicates, Functions, Connectives, Quantifiers, Equality, etc.）
+
+**Atomic Sentence（原子句）**
+
+- 原子句是一阶逻辑中最基本的句子，由谓词符号和一系列项组成的括号构成。（Atomic sentences are the most basic sentences of first-order logic. These sentences are formed from a predicate symbol followed by a parenthesis with a sequence of terms.）
+- 可以表示为谓词（项1，项2，…，项n）。（We can represent atomic sentences as Predicate (term1, term2, ..., term n).）
+- 示例：Ravi和Ajay是兄弟 => Brothers(Ravi, Ajay)；Chinky是一只猫 => cat(Chinky)。（Example: Ravi and Ajay are brothers: => Brothers(Ravi, Ajay). Chinky is a cat: => cat(Chinky).）
+
+**Complex Sentence（复合句）**
+
+- 复合句是通过使用连接词将原子句结合在一起构成的。（Complex sentences are made by combining atomic sentences using connectives.）
+
+**First-order Logic Statements（FOL语句）**
+
+- FOL语句可以分为两部分：
+  - **主语**：语句的主要部分。（Subject: Subject is the main part of the statement.）
+  - **谓词**：谓词可以定义为一种关系，将两个原子结合在一个语句中。（Predicate: A predicate can be defined as a relation, which binds two atoms together in a statement.）
+- 示例：“x是一个整数”中，x是主语，“是一个整数”是谓词。（Consider the statement: "x is an integer", where x is the subject and "is an integer" is known as a predicate.）
+
+**Quantifiers in FOL（FOL中的量词）**
+
+- 量词是生成量化的语言元素，指定宇宙中的样本数量。（A quantifier is a language element which generates quantification, specifying the quantity of specimen in the universe of discourse.）
+- 有两种类型的量词：
+  - **全称量词**，用于所有对象（Universal Quantifier: for all, everyone, everything）
+  - **存在量词**，用于某些对象（Existential Quantifier: for some, at least one）
+
+**Inference in FOL（FOL中的推理）**
+
+- FOL的量词推理规则包括：
+  - 全称泛化（Universal Generalization）
+  - 全称实例化（Universal Instantiation）
+  - 存在实例化（Existential Instantiation）
+  - 存在引入（Existential Introduction）
+
+
+
+## 4.5 Reasoning in AI
+
+**Deductive Reasoning（演绎推理）**
+
+- 从逻辑相关的已知信息中推导出新信息。（Deducing new information from logically related known information.）
+- 当前提为真时，论点的结论也必须为真。（The argument's conclusion must be true when the premises are true.）
+- 也称为自上而下推理，与归纳推理相对。（Referred to as top-down reasoning, and contradictory to inductive reasoning.）
+- 示例：
+  - 前提1：所有人类都吃蔬菜（Premise-1: All humans eat veggies）
+  - 前提2：Suresh 是人类（Premise-2: Suresh is human）
+  - 结论：Suresh 吃蔬菜（Conclusion: Suresh eats veggies）
+
+**Inductive Reasoning（归纳推理）**
+
+- 通过推广有限的事实集合来得出结论的推理形式。（A form of reasoning to arrive at a conclusion using limited sets of facts by the process of generalization.）
+- 也称为因果推理或自下而上推理。（Also known as cause-effect reasoning or bottom-up reasoning.）
+- 示例：
+  - 前提：在动物园中见到的所有鸽子都是白色的（Premise: All of the pigeons we have seen in the zoo are white.）
+  - 结论：因此，我们可以期望所有的鸽子都是白色的（Conclusion: Therefore, we can expect all the pigeons to be white.）
+
+**Abductive Reasoning（溯因推理）**
+
+- 一种从单一或多个观察开始并寻找最可能的解释或结论的逻辑推理形式。（A form of logical reasoning which starts with single or multiple observations and then seeks to find the most likely explanation or conclusion for the observation.）
+- 示例：
+  - 蕴含：如果下雨，板球场地会湿（Implication: Cricket ground is wet if it is raining）
+  - 公理：板球场地是湿的（Axiom: Cricket ground is wet）
+  - 结论：在下雨（Conclusion: It is raining）
+
+**Common Sense Reasoning（常识推理）**
+
+- 一种非正式的推理形式，通过经验获得。（An informal form of reasoning, which can be gained through experiences.）
+- 依赖于良好的判断而不是精确的逻辑，基于启发式知识和规则。（It relies on good judgment rather than exact logic and operates on heuristic knowledge and heuristic rules.）
+- 示例：
+  - 一个人一次只能在一个地方。（One person can be at one place at a time.）
+  - 如果我把手放在火里，它会被烧伤。（If I put my hand in a fire, then it will burn.）
+
+**Monotonic Reasoning（单调推理）**
+
+- 一旦得出结论，即使添加信息也不会改变结论。（Once the conclusion is taken, then it will remain the same even if we add more information to the existing information in our knowledge base.）
+- 不适用于实时系统。（Not useful for real-time systems.）
+- 单调推理用于传统推理系统。（Monotonic reasoning is used in conventional reasoning systems.）
+- 示例：地球围绕太阳旋转。（Example: Earth revolves around the Sun.）
+
+**Non-Monotonic Reasoning（非单调推理）**
+
+- 如果我们向知识库添加更多信息，某些结论可能会失效。（Some conclusions may be invalidated if we add more information to our knowledge base.）
+
+- 示例：
+
+  - 假设知识库包含以下知识：鸟会飞，企鹅不会飞，Pitty 是鸟。因此我们可以得出结论：Pitty 会飞。（Suppose the knowledge base contains: Birds can fly, Penguins cannot fly, Pitty is a bird. So, we conclude: Pitty can fly.）
+  - 但是，如果我们添加另一个信息“Pitty 是企鹅”，则推导出“Pitty 不能飞”，从而推翻之前的结论。（However, if we add "Pitty is a penguin", it concludes "Pitty cannot fly", thus invalidating the previous conclusion.）
+
+  
+
+<font color=blue>**Deductive vs. Inductive Reasoning**</font>
+
+- **演绎推理（Deductive Reasoning）**
+  - 通过已知相关事实和信息推导新信息或结论的推理形式，采用自上而下的方法。（Deductive reasoning is the form of valid reasoning, to deduce new information or conclusion from known related facts and information, following a top-down approach.）
+  - 演绎推理从前提出发，要求前提为真时结论必须为真。（Deductive reasoning starts from premises and requires that the conclusion must be true if the premises are true.）
+  - 演绎推理难以使用，因为需要事实必须为真。（Use of deductive reasoning is difficult, as we need facts which must be true.）
+  - 过程：理论→假设→模式→确认。（Process: Theory → hypothesis → patterns → confirmation.）
+  - 演绎推理中的论点可以是有效或无效的。（In deductive reasoning, arguments may be valid or invalid.）
+  - 从一般事实推导具体结论。（Reaches from general facts to specific facts.）
+
+- **归纳推理（Inductive Reasoning）**
+  - 通过推广特定事实或数据来得出结论的推理形式，采用自下而上的方法。（Inductive reasoning arrives at a conclusion by the process of generalization using specific facts or data, following a bottom-up approach.）
+  - 归纳推理从结论出发，但前提的真实性并不能保证结论的真实性。（Inductive reasoning starts from the conclusion, but the truth of premises does not guarantee the truth of conclusions.）
+  - 归纳推理使用快速且易于使用的证据，而不是严格的事实，经常在日常生活中使用。（Use of inductive reasoning is fast and easy, as we need evidence instead of true facts. Often used in our daily life.）
+  - 过程：观察→模式→假设→理论。（Process: Observations → patterns → hypothesis → Theory.）
+  - 归纳推理中的论点可以是强或弱的。（In inductive reasoning, arguments may be weak or strong.）
+  - 从具体事实推导出一般结论。（Reaches from specific facts to general facts.）
+
+| Basis for comparison | Deductive Reasoning                                          | Inductive Reasoning                                          |
+| -------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Definition           | 演绎推理是一种通过已知相关事实和信息推导新信息或结论的有效推理形式。 | 归纳推理通过推广特定事实或数据来得出结论的过程。             |
+| Approach             | 演绎推理采用自上而下的方法。                                 | 归纳推理采用自下而上的方法。                                 |
+| Starts from          | 演绎推理从前提出发。                                         | 归纳推理从结论出发。                                         |
+| Validity             | 在演绎推理中，前提为真时结论必须为真。                       | 在归纳推理中，前提的真实性并不能保证结论的真实性。           |
+| Usage                | 演绎推理难以使用，因为需要事实必须为真。                     | 归纳推理使用快速且易于使用的证据，而不是严格的事实，通常在日常生活中使用。 |
+| Process              | 理论→假设→模式→确认。                                        | 观察→模式→假设→理论。                                        |
+| Argument             | 演绎推理中的论点可以是有效或无效的。                         | 归纳推理中的论点可以是强或弱的。                             |
+| Structure            | 从一般事实推导具体结论。                                     | 从具体事实推导出一般结论。                                   |
+

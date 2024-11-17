@@ -669,3 +669,368 @@ A* 是一种领先的路径搜索算法，用于找到从起点到目标的最�
 | Argument             | 演绎推理中的论点可以是有效或无效的。                         | 归纳推理中的论点可以是强或弱的。                             |
 | Structure            | 从一般事实推导具体结论。                                     | 从具体事实推导出一般结论。                                   |
 
+
+# 5 Machine Learning
+
+## 5.1 Introduction
+
+**机器学习：推动AI的引擎** 
+机器学习是人工智能的一个分支，使机器能够从数据中学习，而无需明确编程。它使机器能够在没有人工干预的情况下进行预测或决策。（Machine learning is a subfield of AI that enables machines to learn from data without being explicitly programmed. It allows machines to make predictions or decisions without human intervention.）
+
+**历史背景**  
+
+- “机器学习”一词由Arthur Samuel在1959年提出。（The term "Machine Learning" was coined in 1959 by Arthur Samuel.）  
+- 机器学习从简单算法演变为复杂的深度学习模型。（Evolution from simple algorithms to sophisticated deep learning models.）  
+- 过去二十年中，由于计算能力和数据可用性的提高，机器学习取得了快速发展。（Rapid growth in the last two decades due to increased data availability and computational power.）
+
+**传统建模与机器学习的对比**  
+
+- 传统建模：基于手工创建的模型进行预测，依赖数据和人工规则。（Traditional modeling: Relies on handcrafted models and rules for predictions.）  
+- 机器学习：基于样本数据进行训练，模型可以通过新数据不断改进。（Machine learning: Trains models using sample data and improves with new data.）
+
+**人类学习与机器学习的异同**  
+
+- **相似点**：  
+  - 学习：人类通过认知过程学习，而机器从它们能访问的数据中学习。（Learning for humans involves a cognitive process, while for machines, it’s a function of their programming.）  
+  - 反馈：人类和机器都通过反馈进行改进。（Both learn from feedback.）  
+- **差异点**：  
+  - 泛化学习与具体学习：人类更擅长在不同环境中泛化，而机器更专注于特定任务。（Humans excel at general learning, while machines focus on specific tasks.）  
+  - 小数据与大数据：人类可以从少量数据中学习，而机器需要大量数据。（Machines need large datasets, while humans learn effectively from small data.）  
+  - 学习速度：机器可以快速处理大量信息，而人类的学习较慢。（Machines process data quickly, but human learning is slower.）
+
+**设计学习系统的步骤**  
+
+1. 选择训练经验（Choosing Training Experience.）  
+2. 选择目标函数（Choosing Target Function.）  
+3. 选择目标函数的表示方式（Choosing Representation of Target Function.）  
+4. 选择函数逼近方法（Choosing Function Approximation.）  
+5. 完成设计（Final Design.）
+
+**机器学习模型**  
+
+- **监督学习**：从标注数据中学习，如决策树、支持向量机。（Supervised Learning: Learn from labeled data (e.g., Decision Tree, Support Vector Machine).）  
+- **无监督学习**：从未标注数据中学习，如K均值聚类。（Unsupervised Learning: Learn from unlabeled data (e.g., K-Means Clustering).）  
+- **强化学习**：通过试错法学习决策，如马尔可夫决策过程。（Reinforcement Learning: Learn by trial and error (e.g., Markov Decision Process).）
+
+**监督学习的类型**  
+
+- **分类**：输出变量是类别，例如图像分类、情感分析、垃圾邮件检测。（Classification: Output is a category (e.g., image classification, sentiment analysis).）  
+- **回归**：输出变量是连续值，例如房价预测、收入预测。（Regression: Output is a continuous value (e.g., predicting house prices, revenue forecasting).）
+
+
+
+## 5.2 Support Vector Machine
+
+**今天的主题：支持向量机 (SVM)**  
+
+- 支持向量机是一种基于统计学习理论的分类器，由Vapnik等人在1992年提出。（A classifier derived from statistical learning theory by Vapnik et al. in 1992.）  
+- SVM在使用图像作为输入时，由于其分类准确性接近于神经网络，因此在手写识别任务中成为著名算法。（SVM became famous when, using images as input, it gave accuracy comparable to neural networks with hand-designed features in a handwriting recognition task.）  
+- 目前，SVM广泛用于对象检测和识别、内容检索、文本识别、生物识别、语音识别等。（Currently, SVM is widely used in object detection & recognition, content-based image retrieval, text recognition, biometrics, speech recognition, etc.）  
+- 此外，它也可用于回归，但今天不涉及。（Also used for regression but will not cover today.）
+
+**大纲**  
+
+- 线性判别函数（Linear Discriminant Function）  
+- 大间隔线性分类器（Large Margin Linear Classifier）  
+- 非线性SVM：核技巧（Nonlinear SVM: The Kernel Trick）  
+- SVM演示（Demo of SVM）
+
+**感知机回顾：线性分隔**  
+
+- 二元分类可视为在特征空间中分隔两类的任务。（Binary classification can be viewed as the task of separating classes in feature space.）  
+- 分类函数：$$f(y) = sign(w^T x + b)$$  
+
+**线性分隔器**  
+
+- 哪条线性分隔器最优？（Which of the linear separators is optimal?）
+
+**分类间隔**  
+
+- 从样本 $$x$$ 到超平面的距离为 $$\frac{w^T x + b}{||w||}$$。  
+- 离超平面最近的样本称为支持向量。（Examples closest to the hyperplane are support vectors.）  
+- 间隔 $$\rho$$ 为支持向量之间的距离。（Margin $$\rho$$ of the separator is the distance between support vectors.）
+
+**最大间隔分类**  
+
+- 根据直觉和PAC理论，最大化间隔是有利的。（Maximizing the margin is good according to intuition and PAC theory.）  
+- 这意味着只有支持向量重要，其他训练样本可以忽略。（Implies that only support vectors matter; other training examples are ignorable.）
+
+**线性SVM的数学定义**  
+
+- 假设训练集为 $$\{(x_i, y_i)\}_{i=1}^n$$，每个样本 $$x_i \in R^d, y \in \{-1, 1\}$$，被超平面 $$w \cdot x + b$$ 以间隔 $$\rho$$ 分隔。（Let training set $$\{(x_i, y_i)\}_{i=1}^n, x \in R^d, y \in \{-1, 1\}$$ be separated by a hyperplane with margin $$\rho$$.）  
+- 对于每个支持向量 $$x$$，不等式成立且距离可以重新定义为 $$\frac{w^T x + b}{||w||}$$。（For every support vector $$x$$, the above inequality is an equality. After rescaling $$w$$ and $$b$$, the hyperplane distance is $$\frac{w^T x + b}{||w||}$$.）  
+- 间隔可以表示为 $$\rho = 2 \cdot \frac{1}{||w||}$$。（Then the margin can be expressed as $$\rho = 2 \cdot \frac{1}{||w||}$$.）
+
+**优化问题的定义**  
+
+- 要找到 $$w$$ 和 $$b$$，以使 $$||w||^2$$ 最小化，同时满足约束 $$y_i(w^T x_i + b) \geq 1$$。（Find $$w$$ and $$b$$ such that $$||w||^2$$ is minimized and $$y_i(w^T x_i + b) \geq 1$$.）  
+- 转化为构建一个二次优化问题，其中引入了拉格朗日乘子以解决每个约束。（The solution involves constructing a dual problem where a Lagrange multiplier is associated with every inequality constraint in the primal problem.）
+
+**优化问题的解**  
+
+- 给定对偶问题的解 $$\alpha_1, \alpha_2, ..., \alpha_n$$，可以用原始变量表达为 $$w = \sum_i \alpha_i y_i x_i$$ 和 $$b = y_k - \sum_i \alpha_i y_i k(x_i, x_k)$$。（Given a solution $$\alpha_1, \alpha_2, ..., \alpha_n$$ to the dual problem, solution to the primal is $$w = \sum_i \alpha_i y_i x_i$$ and $$b = y_k - \sum_i \alpha_i y_i k(x_i, x_k)$$.）  
+- 分类函数依赖于支持向量，但不需要显式求解 $$w$$。（Then classifying function is dependent only on support vectors; no need to explicitly solve $$w$$.）  
+- 内积用于测试点和支持向量之间的关系，且通过对偶方法优化时，隐式包含训练点的内积。（Notice that it relies on an inner product between the test point and the support vectors $$x$$. Solving the dual optimization problem involved computing inner products of $$x$$ between all training points.）
+
+**软间隔分类**  
+
+- 如果训练集不是线性可分的，可以引入松弛变量 $$\xi_i$$，以允许对困难或噪声样本的错误分类，从而形成“软”间隔。（What if the training set is not linearly separable? Slack variables $$\xi_i$$ can be added to allow misclassification of difficult or noisy examples, resulting in a margin called soft.）
+
+**软间隔分类的数学定义**  
+
+- 旧的公式定义为： 
+  $$\Phi(w) = w^T w$$ 最小化，同时对所有 $$(x_i, y_i)$$ 满足： 
+  $$y_i(w^T x_i + b) \geq 1$$（Find $$w$$ and $$b$$ such that $$\Phi(w) = w^T w$$ is minimized and $$y_i(w^T x_i + b) \geq 1$$ for all $$(x_i, y_i).$$）  
+- 修改后的公式引入了松弛变量： 
+  $$\Phi(w) = w^T w + C \sum_{i=1}^n \xi_i$$ 最小化，同时满足： 
+  $$y_i(w^T x_i + b) \geq 1 - \xi_i, \xi_i \geq 0$$（Find $$w$$ and $$b$$ such that $$\Phi(w) = w^T w + C \sum_{i=1}^n \xi_i$$ is minimized and $$y_i(w^T x_i + b) \geq 1 - \xi_i, \xi_i \geq 0.$$）  
+- 参数 $$C$$ 可被视为控制过拟合的一种方式。（Parameter $$C$$ can be viewed as a way to control overfitting.）
+
+**软间隔分类的解决方案**  
+
+- 如果训练数据不是线性可分的，松弛变量 $$\xi_i$$ 可被引入以允许对困难或噪声样本的错误分类。（If the training data is not linearly separable, slack variables $$\xi_i$$ can be added to allow misclassification of difficult or noisy examples.）  
+- 容许一定的错误：一些点可以移动到正确类别，但需付出代价。（Allow some errors: Let some points be moved to where they belong, at a cost.）  
+- 尽量最小化训练集错误，并尽可能将超平面“远离”每个类别（即大间隔）。（Still, try to minimize training set errors, and to place hyperplane "far" from each class (large margin).）
+
+**软间隔分类的对偶问题**  
+
+- 对偶问题与线性可分的情况相同，但需要额外的拉格朗日乘子以处理松弛变量。（Dual problem is identical to separable case, but additional Lagrange multipliers are needed for slack variables.）  
+- 对偶问题的解： 
+  $$w = \sum_i \alpha_i y_i x_i$$ 
+  $$b = y_k(1 - \xi_i) - \sum_i \alpha_i y_i x_i$$（Solution to the dual problem is $$w = \sum_i \alpha_i y_i x_i$$ and $$b = y_k(1 - \xi_i) - \sum_i \alpha_i y_i x_i.$$）  
+- 分类函数可直接表示为： 
+  $$f(x) = \sum_i \alpha_i y_i k(x_i, x) + b$$（Classification function: $$f(x) = \sum_i \alpha_i y_i k(x_i, x) + b.$$）
+
+**最大间隔的理论依据**  
+
+- Vapnik证明了以下结论： 
+  $$h \leq \min\left(\left(\frac{\rho}{D}\right)^2 m_0 + 1\right)$$ 
+  其中 $$\rho$$ 为间隔，$$D$$ 为可以包围所有训练样本的最小球体的直径，$$m_0$$ 为维度。（Vapnik has proved the following: $$h \leq \min\left(\left(\frac{\rho}{D}\right)^2 m_0 + 1\right),$$ where $$\rho$$ is the margin, $$D$$ is the diameter of the smallest sphere that can enclose all training examples, and $$m_0$$ is the dimensionality.）  
+- 直观上，这意味着无论维度 $$m_0$$ 有多大，通过最大化间隔 $$\rho$$ 可以最小化VC维度，从而保持分类器的复杂度。（Intuitively, this implies that regardless of dimensionality $$m_0,$$ we can minimize the VC dimension by maximizing the margin $$\rho,$$ keeping the classifier's complexity small regardless of dimensionality.）
+
+**线性SVM概述**  
+
+- 分类器是分隔超平面。（The classifier is a separating hyperplane.）  
+- 最“重要”的训练点是支持向量；它们定义了超平面。（Most "important" training points are support vectors; they define the hyperplane.）  
+- 二次优化算法可识别具有非零拉格朗日乘子的支持向量训练点 $$\alpha_i$$。（Quadratic optimization algorithms can identify which training points $$x_i$$ are support vectors with non-zero Lagrangian multipliers $$\alpha_i.$$
+- 在对偶公式中，支持向量仅通过内积出现。（In the dual formulation of the problem, training points appear only inside inner products.）
+
+**非线性SVM**  
+
+- 对于带有一些噪声的线性可分数据集效果很好。（Datasets that are linearly separable with some noise work out great.）  
+- 如果数据集太难处理怎么办？可以考虑将数据映射到更高维的空间。（What are we going to do if the dataset is just too hard? How about mapping data to a higher-dimensional space?）
+
+**非线性SVM：特征空间**  
+
+- 基本思想：原始特征空间可以始终映射到某个更高维的特征空间，在该空间中训练集是可分的。（General idea: The original feature space can always be mapped to some higher-dimensional feature space where the training set is separable.）
+
+**核技巧（Kernel Trick）**  
+
+- 线性分类器依赖于向量间的内积 $$k(x_i, x_j) = x_i \cdot x_j$$。（The linear classifier relies on the inner product between vectors $$k(x_i, x_j) = x_i \cdot x_j$$.）  
+- 如果通过某种变换 $$\phi$$ 将数据点映射到高维空间，则内积变为：$$k(x_i, x_j) = \phi(x_i) \cdot \phi(x_j)$$。（If every data point is mapped into a high-dimensional space via some transformation $$\phi$$, the inner product becomes $$k(x_i, x_j) = \phi(x_i) \cdot \phi(x_j)$$.）  
+- 核函数是与高维空间内积等价的函数。例如，二维向量 $$x$$ 的核函数 $$K(x_i, x_j) = (1 + x_i^T x_j)^2$$。（A kernel function is a function that is equivalent to an inner product in some feature space. Example: $$K(x_i, x_j) = (1 + x_i^T x_j)^2$$ for 2D vectors.）
+
+- 核函数隐式地将数据映射到高维空间，而无需显式计算 $$\phi(x)$$。（Thus, a kernel function implicitly maps data to a high-dimensional space without the need to compute each $$\phi(x)$$ explicitly.）
+
+**什么样的函数可以是核函数？**  
+
+- 对于某些函数 $$K(x_i, x_j)$$，检查 $$K(x_i, x_j) = \phi(x_i) \cdot \phi(x_j)$$ 可能很麻烦。（For some functions $$K(x_i, x_j)$$, checking that $$K(x_i, x_j) = \phi(x_i) \cdot \phi(x_j)$$ can be cumbersome.）  
+- Mercer定理：每个半正定对称函数都是核函数。（Mercer's theorem: Every semi-positive definite symmetric function is a kernel.）  
+- 半正定对称函数对应一个半正定对称Gram矩阵。（Semi-positive definite symmetric functions correspond to a semi-positive definite symmetric Gram matrix.）
+
+**核函数的示例**  
+
+- 线性核：$$K(x_i, x_j) = x_i^T x_j$$，映射为 $$\phi(x) = x$$。（Linear: $$K(x_i, x_j) = x_i^T x_j$$, mapping $$\phi(x) = x$$ itself.）  
+- 多项式核：$$K(x_i, x_j) = (1 + x_i^T x_j)^p$$，映射为具有 $$p$$ 个维度的函数 $$\phi(x)$$。（Polynomial of power $$p$$: $$K(x_i, x_j) = (1 + x_i^T x_j)^p$$, mapping to $$\phi(x)$$ with $$p$$ dimensions.）  
+- 高斯核（径向基核）：$$K(x_i, x_j) = \exp\left(-\frac{||x_i - x_j||^2}{2\sigma^2}\right)$$，映射到无限维的函数空间。（Gaussian (radial-basis function): $$K(x_i, x_j) = \exp\left(-\frac{||x_i - x_j||^2}{2\sigma^2}\right)$$, mapping $$\phi(x)$$ to an infinite-dimensional space.）
+
+**非线性SVM的数学定义**  
+
+- 对偶问题公式：  
+  $$\max \sum_i \alpha_i - \frac{1}{2} \sum_i \sum_j \alpha_i \alpha_j y_i y_j K(x_i, x_j)$$  
+  满足约束：  
+  $$\sum_i \alpha_i y_i = 0, 0 \leq \alpha_i \leq C$$。（Dual problem formulation: $$\max \sum_i \alpha_i - \frac{1}{2} \sum_i \sum_j \alpha_i \alpha_j y_i y_j K(x_i, x_j)$$ subject to constraints $$\sum_i \alpha_i y_i = 0, 0 \leq \alpha_i \leq C.$$）  
+- 解为：  
+  $$f(x) = \sum_i \alpha_i y_i K(x_i, x) + b$$。（The solution is: $$f(x) = \sum_i \alpha_i y_i K(x_i, x) + b.$$）
+
+**SVM的应用**  
+
+- SVM最早由Boser、Guyon和Vapnik在1992年提出，并在20世纪90年代末开始流行。（SVMs were originally proposed by Boser, Guyon, and Vapnik in 1992 and gained increasing popularity in the late 1990s.）  
+- SVM目前是从文本到基因组数据等许多任务中表现最好的算法之一。（SVMs are currently among the best performers for a number of classification tasks ranging from text to genomic data.）  
+- SVM可以通过设计适合该任务的核函数扩展到图、序列和其他任务。（SVMs can be applied to tasks beyond feature vectors (e.g., graphs, sequences, relational data) by designing kernel functions for such data.）  
+- 常用的优化算法包括SMO和分解算法。（Most popular optimization algorithms for SVMs use decomposition methods, e.g., SMO.）  
+- 调整SVM的核函数和参数通常通过尝试和测试完成。（Tuning SVM kernels and parameters is usually done in a try-and-see manner.）
+
+
+
+## 5.3 Unsupervised Learning
+
+### 5.3.1 Clustering
+
+**无监督学习的类型**  
+
+- **聚类（Clustering）**：一种通过将具有相似特征或特性的数据点分组到一起的技术。（Technique that involves grouping similar objects or data points together into clusters, based on certain features or characteristics.）  
+- **降维（Dimensionality Reduction）**：一种将输出变量为实际值或定量值（如权重、预算等）的问题类型。（It involves a type of problem where the output variable is a real value or quantitative, such as weight, budget, etc.）
+
+**聚类算法**  
+无监督学习算法（Unsupervised Learning Algorithm）
+
+**简介**  
+
+- 聚类是一种机器学习技术，通过根据特定特征或属性将相似的对象或数据点分组到簇中。（Clustering is a machine learning technique that involves grouping similar objects or data points together into clusters, based on certain features or characteristics.）  
+- 广泛应用于各行业，例如市场营销、医疗、金融等。（Important in various industries, such as marketing, healthcare, finance, and more.）  
+- 聚类的主要目标是识别自然分组，最小化同一簇中数据点之间的距离或相似性，最大化不同簇中数据点之间的距离或不相似性。（The main goals of clustering are to identify natural groupings in data, minimize the distance or dissimilarity between data points within the same cluster, and maximize the distance or dissimilarity between data points in different clusters.）
+
+**聚类的应用**  
+
+- 市场营销（Marketing）  
+- 医疗（Healthcare）  
+- 金融（Finance）  
+- 图像与语音识别（Image and speech recognition）  
+- 异常检测（Anomaly detection）
+
+**聚类的相似性和不相似性度量**  
+
+- **欧几里得距离（Euclidean Distance）**：这是多维空间中两点之间的常见距离度量，计算公式为两点对应坐标差平方和的平方根。（This is a common measure of distance between two points in a multidimensional space. It is calculated as the square root of the sum of the squared differences between corresponding coordinates of the two points.）  
+- **曼哈顿距离（Manhattan Distance）**：通过两点的对应坐标差的绝对值之和来测量距离，常用于图像识别或模式匹配。（This is another measure of distance between two points, based on the absolute differences between corresponding coordinates of the two points. It is often used in image recognition or pattern matching.）  
+- **余弦相似度（Cosine Similarity）**：用于测量两个向量之间的相似性，基于它们夹角的余弦值，常用于自然语言处理或推荐系统。（This is a measure of similarity between two vectors, based on the cosine of the angle between them. It is often used in natural language processing or recommendation systems.）
+
+**K均值聚类算法（K-Means Algorithm）**  
+
+- K均值是一种广泛使用的聚类算法，通过将数据分成$$K$$个预定义的簇，每个簇由一个中心定义。（K-Means is a widely used algorithm for clustering that aims to partition a dataset into $$K$$ distinct clusters, where $$K$$ is a pre-specified number.）  
+- 适用于分离良好的簇，并能处理多种类型的数据，例如数值或分类变量。（Effective for well-separated clusters and can handle different types of data, such as numerical or categorical variables.）  
+- 需要预先指定簇的数量，这在某些情况下可能并不容易。（Requires the pre-specification of the number of clusters, which may not be known in advance or may be difficult to determine.）
+
+**K均值算法步骤**  
+
+1. **初始化**：从数据集中随机选择$$K$$个点作为初始中心点。（Initialization: Select $$K$$ random data points from the dataset as the initial centroids for the $$K$$ clusters.）  
+2. **分配**：根据欧几里得距离或曼哈顿距离，将每个数据点分配到最近的中心点所属的簇中。（Assignment: Assign each data point to the cluster whose centroid is closest to it, based on a distance measure such as Euclidean distance or Manhattan distance.）  
+3. **更新**：计算每个簇中新点的平均值，并将其作为新中心。（Update: Calculate the mean of each cluster as the mean of all the data points assigned to that cluster.）  
+4. **收敛**：重复步骤2和3，直到中心点不再变化，或者达到最大迭代次数。（Convergence: Repeat steps 2 and 3 until the centroids converge, i.e., until the change in the centroids is below a certain threshold or the maximum number of iterations is reached.）
+
+**K均值算法的初始化**  
+
+- 初始化是K均值聚类算法的第一步，涉及为$$K$$个簇选择初始中心点。（The initialization step is the first step in the K-Means clustering algorithm, and it involves selecting the initial centroids for the $$K$$ clusters.）  
+- 一种常见方法是随机选择$$K$$个点作为初始中心点。（One common method for initialization is random selection, where $$K$$ data points are randomly selected from the dataset to serve as the initial centroids.）  
+- 例如：可以手动指定簇的数量，并随机挑选点作为中心。（Example: You can manually specify the number of clusters and randomly pick $$K$$ data points as centroids.）
+
+**K均值算法 - 分配步骤**  (Assignment Step)
+
+- 在分配步骤中，算法会将数据点分配到距离最近的簇中心。（In the assignment step, data points are assigned to the nearest cluster based on the distance to each cluster's centroid.）  
+- 这里常用的距离度量是欧几里得距离，其计算公式为： 
+  $$\text{Distance}(x_i, \mu_j) = \sqrt{\sum_{d=1}^{D}(x_{i,d} - \mu_{j,d})^2}$$ 
+  其中，$$x_i$$ 是数据点，$$\mu_j$$ 是簇中心，$$D$$ 是特征的维度。（The common distance measure used is the Euclidean distance, given by $$\text{Distance}(x_i, \mu_j) = \sqrt{\sum_{d=1}^{D}(x_{i,d} - \mu_{j,d})^2},$$ where $$x_i$$ is the data point, $$\mu_j$$ is the centroid, and $$D$$ is the number of features.）  
+- 分配步骤的目标是最小化每个簇内数据点到其中心的距离。（The goal of this step is to minimize the distance of each data point to its assigned cluster center.）
+
+**K均值算法 - 更新步骤**  
+
+- 更新步骤中，每个簇的中心会更新为当前簇中所有点的平均值。（In the update step, the centroid of each cluster is updated to the mean of all the data points assigned to that cluster.）  
+- 更新公式为： 
+  $$\mu_j = \frac{1}{n_j} \sum_{x \in C_j} x$$ 
+  其中，$$\mu_j$$ 是更新后的簇中心，$$C_j$$ 是簇，$$n_j$$ 是属于簇 $$C_j$$ 的数据点数量。（The update formula is $$\mu_j = \frac{1}{n_j} \sum_{x \in C_j} x,$$ where $$\mu_j$$ is the updated centroid, $$C_j$$ is the cluster, and $$n_j$$ is the number of data points in cluster $$C_j$$.）  
+- 更新步骤的目标是重新定位簇中心，以更好地反映当前簇内的数据分布。（The goal of this step is to reposition the centroids to better reflect the distribution of data points within each cluster.）
+
+**K均值算法 - 收敛准则**  
+
+- 收敛准则是K均值算法的最后一步，用于决定算法何时停止。（The convergence criteria is the final step in the K-Means clustering algorithm, and it determines when the algorithm should stop.）  
+- 常见的收敛条件包括：  
+  1. 中心点的位置不再发生显著变化。（The centroids' positions no longer change significantly.）  
+  2. 达到预定义的最大迭代次数。（The maximum number of iterations is reached.）  
+- 一旦满足收敛条件，算法终止，输出最终的簇分配。（Once the convergence condition is met, the algorithm stops, and the final cluster assignments are produced.）  
+
+**收敛过程的可视化**  
+
+- 收敛过程的图示展示了数据点的动态分配和簇中心的调整，直到最终分组稳定。（The visualization of the convergence process illustrates the dynamic reassignment of data points and adjustment of cluster centroids until the final groupings stabilize.）
+
+<font color=blue>**聚类算法 - 层次聚类**  </font>
+
+- 层次聚类是一种通过递归地分裂或合并簇，基于数据点之间的相似性创建簇树结构的算法。（Hierarchical clustering is a type of clustering algorithm that creates a tree-like structure of clusters by recursively dividing or merging clusters based on the similarity between data points.）  
+- 两种主要类型：  
+  - **凝聚式聚类（Agglomerative）**：从每个数据点为一个单独簇开始，逐步合并最相似的簇。（Start with each data point as its own cluster, then iteratively merge the closest clusters.）  
+  - **分裂式聚类（Divisive）**：从一个大簇开始，递归地将其分裂为更小的簇。（Start with a single cluster containing all data points, then split it into smaller clusters recursively.）
+
+**层次聚类策略**  
+
+- **自底向上（Bottom-up，凝聚式）**：递归合并两个簇间距离最小的簇。（Recursively merge two groups with the smallest between-cluster dissimilarity.）  
+- **自顶向下（Top-down，分裂式）**：递归地将簇分裂成两个子簇，直至每个叶子簇只包含一个对象。（Recursively split a cluster into two subclusters until each leaf cluster contains only one object.）
+
+**凝聚式方法**  
+
+- 初始化：每个对象为一个簇。（Initialization: Each object is a cluster.）  
+- 迭代：合并两个最相似的簇，直到所有对象合并为一个簇。（Iteration: Merge two clusters that are most similar to each other until all objects are merged into a single cluster.）
+
+**分裂式方法**  
+
+- 初始化：所有对象开始时在同一个簇中。（Initialization: All objects stay in one cluster.）  
+- 迭代：选择一个簇并将其分裂成两个子簇，直至每个簇只包含一个对象。（Iteration: Select a cluster and split it into two subclusters until each leaf cluster contains only one object.）
+
+**层次切割**  
+
+- 用户可以选择在层次图中切割以表示最自然的簇划分。（Users can choose a cut through the hierarchy to represent the most natural division into clusters.）  
+- 示例：选择簇间不相似性超过某个阈值的切割点。（E.g., choose the cut where intergroup dissimilarity exceeds some threshold.）
+
+**相似性测量方法**  
+
+- 两个不相交簇 $$G$$ 和 $$H$$ 的不相似性 $$D(G, H)$$ 是基于成对数据点间的不相似性 $$D(i, j)$$ 计算的：  
+  - **单链法（Single Linkage）**：簇间的最近距离。（Single Linkage: Minimum distance between clusters.） 
+    $$D_{SL}(G, H) = \min_{i \in G, j \in H} D(i, j)$$  
+  - **全链法（Complete Linkage）**：簇间的最远距离。（Complete Linkage: Maximum distance between clusters.） 
+    $$D_{CL}(G, H) = \max_{i \in G, j \in H} D(i, j)$$  
+  - **组平均法（Group Average）**：簇间平均距离，权衡单链法和全链法。（Group Average: Average distance between clusters.） 
+    $$D_{GA}(G, H) = \frac{1}{|G| \cdot |H|} \sum_{i \in G, j \in H} D(i, j)$$
+
+<font color=blue>**谱聚类（Spectral Clustering）**  </font>
+
+- 将数据点表示为图 $$G$$ 的顶点。（Represent datapoints as the vertices $$V$$ of a graph $$G$$.）  
+- 图的所有顶点通过边连接，边具有权重 $$W$$。（All pairs of vertices are connected by an edge, and edges have weights $$W$$.）  
+- 边的权重反映相似性：大权重表示相邻顶点非常相似，小权重表示不相似。（Edge weights mean that adjacent vertices are very similar; small weights imply dissimilarity.）
+
+**图分割（Graph Partitioning）**  
+
+- 在图上进行聚类等价于对图的顶点进行分割。（Clustering on a graph is equivalent to partitioning the vertices of the graph.）  
+- 损失函数用于划分顶点集 $$V$$ 为 $$A$$ 和 $$B$$ 两部分： 
+  $$\text{cut}(A, B) = \sum_{i \in A, j \in B} W_{ij}$$ 
+  其中 $$W_{ij}$$ 是边权重，较小的 $$\text{cut}(A, B)$$ 表示较好的分割。（The loss function for a partition of $$V$$ into sets $$A$$ and $$B$$ is $$\text{cut}(A, B) = \sum_{i \in A, j \in B} W_{ij}$$. A good partition has small $$\text{cut}(A, B)$$.）  
+- 最小划分标准（Min-cut criterion）：寻找划分 $$A$$ 和 $$B$$，使 $$\text{cut}(A, B)$$ 最小。（Min-cut criterion: Find partition $$A, B$$ that minimizes $$\text{cut}(A, B)$$.）  
+
+**归一化划分标准**  
+
+- 最小划分可能忽略了子图的大小平衡问题。（Min-cut criterion ignores the size of the subgraphs formed.）  
+- 归一化划分标准（Normalized cut criterion）： 
+  $$\text{Ncut}(A, B) = \frac{\text{cut}(A, B)}{\text{assoc}(A, V)} + \frac{\text{cut}(A, B)}{\text{assoc}(B, V)}$$ 
+  其中，$$\text{assoc}(A, V) = \sum_{i \in A, j \in V} W_{ij}$$。（Normalized cut criterion favors balanced partitions.）  
+- 最小化归一化划分标准是一个NP难问题。（Minimizing the normalized cut criterion exactly is NP-hard.）
+
+**谱聚类（Spectral Clustering）**  
+
+- 在谱聚类中，数据点被视为图的节点。（In spectral clustering, the data points are treated as nodes of a graph.）  
+- 谱聚类步骤：  
+  1. **构建相似图（Build a similarity graph）**  
+  2. **将数据投影到低维空间（Project the data onto a low-dimensional space）**  
+  3. **创建簇（Create clusters）**
+
+**谱聚类 - 第一步：构建相似图**  
+
+- 构建一个无向图 $$G = (V, E)$$，顶点集为 $$V = \{v_1, v_2, ..., v_n\}$$，表示数据中的 $$n$$ 个观测点。（We first create an undirected graph $$G = (V, E)$$ with vertex set $$V = \{v_1, v_2, ..., v_n\}$$, $$n$$ observations in the data.）  
+- 相似性可以通过邻接矩阵表示：  
+  - $$k$$-邻近图（KNN graph）  
+  - 完全连接图（Fully connected graph）  
+  - 高斯核函数：$$s(x_i, x_j) = \exp\left(-\frac{||x_i - x_j||^2}{2\sigma^2}\right)$$（Gaussian kernel: $$s(x_i, x_j) = \exp\left(-\frac{||x_i - x_j||^2}{2\sigma^2}\right).$$）
+
+**谱聚类 - 第二步：低维投影**  
+
+- 计算图拉普拉斯矩阵：$$L = D - A$$ 
+  其中，$$A$$ 是邻接矩阵，$$D$$ 是度矩阵： 
+  $$D_{ii} = \sum_{j} W_{ij}$$。（Compute the graph Laplacian: $$L = D - A,$$ where $$A$$ is the adjacency matrix, and $$D$$ is the degree matrix.）  
+- 通过计算 $$L$$ 的特征值和特征向量，将数据投影到低维空间。（Project the data onto a low-dimensional space by computing eigenvalues and eigenvectors of $$L$$.）  
+- 拉普拉斯矩阵的谱范围为 $$0 = \lambda_1 \leq \lambda_2 \leq ... \leq \lambda_n$$。（The spectrum of the Laplacian is $$0 = \lambda_1 \leq \lambda_2 \leq ... \leq \lambda_n.$$）
+
+**谱聚类 - 第三步：创建簇**  
+
+- 使用第二小的特征值对应的特征向量进行分割。（Use the eigenvector corresponding to the 2nd smallest eigenvalue to split the nodes.）  
+- 例如，根据特征向量值的正负将节点分为两类。（For example, split nodes into two clusters based on the sign of the values in the eigenvector.）  
+- 多簇问题可以通过使用多个特征向量进行扩展。（For multi-cluster problems, use multiple eigenvectors.）
+
+
+
+### 5.3.2 Dimensionality Reduction

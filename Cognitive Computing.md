@@ -1286,3 +1286,436 @@ NLP的目标是使计算机能够识别并响应人类的沟通。主要应用�
 4. **Knowledge Discovery (知识发现)**
    - Associations found between entities can be contextualized within the existing domain knowledge to uncover insights.
    - 实体之间的关联可以在现有领域知识的上下文中进行，揭示洞见。
+
+# 6 Building a cognitive application
+
+## 6.1 Overview
+
+**Cognitive Computing Modeling Lifecycle**
+
+1. **Data Collection（数据收集）**
+   从各种来源（包括数据库、社交媒体、文本、图像和视频）中收集相关的结构化和非结构化数据。（Collect relevant data from various sources, including structured and unstructured data from databases, social media, text documents, images, and videos.）
+2. **Data Preprocessing（数据预处理）**
+   清理并将收集的数据转换为可用格式，去除重复、修正错误、标准化数据。（Clean and transform the collected data into a usable format by removing duplicates, correcting errors, and normalizing the data.）
+3. **Feature Engineering（特征工程）**
+   选择和创建将作为认知计算模型输入的相关特征，基于领域知识和应用需求。（Select and create relevant features that will be used as inputs to the cognitive computing model based on domain knowledge and expertise in the specific application area.）
+4. **Model Development（模型开发）**
+   使用机器学习、自然语言处理和计算机视觉等技术开发认知计算模型，并在数据子集上进行训练和验证以确保泛化能力。（Develop the cognitive computing model using various techniques such as machine learning, natural language processing, and computer vision. Train and validate the model on subsets of the data to ensure it can generalize well to new data.）
+5. **Model Evaluation（模型评估）**
+   使用测试数据集的准确率、精确率、召回率和F1分数等指标来评估模型性能。（Evaluate the model's performance using accuracy, precision, recall, and F1 score metrics on a test data set.）
+6. **Model Deployment（模型部署）**
+   将模型部署到生产环境中，集成到应用程序基础设施，使其可供终端用户访问。（Deploy the model to a production environment by integrating it into the application infrastructure and making it accessible to end-users.）
+7. **Model Maintenance（模型维护）**
+   通过监控性能、在新数据上重新训练、进行必要改进来维护和更新模型。（Maintain and update the model over time by monitoring its performance, retraining it on new data, and making necessary improvements.）
+
+**Cognitive Computing Modeling Lifecycle（认知计算建模生命周期）**
+
+- 设计认知应用的关键步骤包括定义目标、定义领域、理解目标用户及其属性、定义问题并探索见解、获取相关数据源、创建和改进语料库、训练和测试。（Key steps in designing cognitive application include defining the objective, defining the domain, understanding the intended users and their attributes, defining questions and exploring insights, acquiring relevant data sources, creating and refining the corpora, training, and testing.）
+
+**Cognitive System Components: Data Sources（认知系统组件：数据源）**
+
+- 数据源可以来自多种类型，包括文本、社交媒体、地理数据、内部结构化数据、非结构化数据等，用于理解用户行为、市场趋势和社交媒体情绪等。（Data sources can come from various types, including text, social media, geographical data, internal structured data, unstructured data, etc., to understand user behavior, market trends, and social media sentiments.）
+
+**Cognitive System Components: Knowledge Representation（认知系统组件：知识表示）**
+
+- 知识表示用于构建信息之间的关联，使系统能够在复杂的信息网络中进行推理和分析。（Knowledge representation is used to build associations between pieces of information, allowing the system to reason and analyze within a complex information network.）
+
+**Cognitive System Components: Machine Learning（认知系统组件：机器学习）**
+
+- 使用不同的机器学习算法和方法进行数据处理和分析，以便更好地理解和预测用户行为或市场趋势。（Various machine learning algorithms and methods are used for data processing and analysis to better understand and predict user behavior or market trends.）
+
+**Cognitive System Components: UI and Interaction Methods（认知系统组件：用户界面和交互方法）**
+
+- 用户界面和交互方式设计确保系统与用户之间的高效交流，包括信息管理、安全性和业务连续性。（UI and interaction methods are designed to ensure efficient communication between the system and the users, including information management, security, and business continuity.）
+
+**Technologies and Tools（技术和工具）**
+
+- 技术工具包括原始数据存储、流处理、批处理、分析存储、AI/ML工具和数据编排等，用于支持认知计算应用的各个方面。（Technological tools include raw data storage, stream processing, batch processing, analytics storage, AI/ML tools, and data orchestration, supporting various aspects of cognitive computing applications.）
+
+
+
+## 6.2 Planning and Design
+
+**Planning and Design 总结**
+
+1. **Identifying the Problem Domain（识别问题领域）**
+   - **识别问题**：确定哪些任务需要类似人类的认知功能。（Identify problem: What tasks require human-like cognitive functions?）
+   - **咨询利益相关者**：通过访谈、调查、研讨会和焦点小组了解需求。（Consult stakeholders: interviews, surveys, workshops, focus groups.）
+   - **问题陈述**：使用SMART标准（Specific、Measurable、Achievable、Relevant、Time-based）来定义明确的目标。（Problem statement: Define a clear goal using SMART criteria.）
+   - **分析现有解决方案**：评估认知系统如何提供更好的解决方案。（Analyze existing solutions: How could a cognitive system provide a better solution?）
+   - **可行性研究**：评估开发当前解决方案的可能性和经济性。（Feasibility studies: Is it possible/affordable to develop the current solution?）
+   - **定义系统需求**：明确系统需求、目标和度量标准。（Define system requirements, objectives, and metrics.）
+2. **Importance of User Requirements（用户需求的重要性）**
+   - 确定项目范围（Define the Scope of a Project）
+   - 识别潜在风险（Identify Potential Risks）
+   - 提供测试基础（Provide a Basis for Testing）
+   - 指导开发人员（Give Direction to Developers）
+   - 确保最终用户体验（Safeguard the End-User Experience）
+   - 促进团队沟通与协作（Fosters Communication and Collaboration Between Team Members）
+   - 避免代价高昂的返工和最后一刻的意外（Avoid Costly Re-Work and Last Minute Surprises）
+
+**I. Overview of Cognitive Systems (认知系统概述)**
+
+- **Purpose of Cognitive Systems**: Emulate human thought processes to solve complex problems.  
+  （认知系统的目的：模仿人类思维过程以解决复杂问题。）
+
+- **Mimic Human Cognition**: Perceive sensory inputs and domains.  
+  （模仿人类认知：感知感官输入和领域。）
+
+- **Enhance Decision-making**: Backed by data, can handle ambiguity.  
+  （增强决策支持：以数据为支撑，能够处理不确定性。）
+
+- **Capture Human Expert Knowledge**: Crowd-sourced expertise.  
+  （捕获人类专家知识：利用集体智慧。）
+
+- **Learning and Adapting**: Self-learning without intervention.  
+  （学习与适应：自主学习，无需干预。）
+
+- **Natural Interaction**: Ease of use for non-technical users.  
+  （自然交互：便于非技术用户使用。）
+
+- **Automate Complex Processes**: Improve speed and accuracy of analytics.  
+  （自动化复杂过程：提高分析速度和准确性。）
+
+- **Personalize User Experience**: Cater to individual preferences.  
+  （个性化用户体验：满足个人偏好。）
+
+**II. Planning and Design: Design Considerations (规划与设计：设计考量)**
+
+1. **Scalability (可扩展性)**
+   - **Is the architecture scalable?**  
+     （架构是否具有可扩展性？）
+   - **Example**: Optimize resource allocation to handle increasing workloads.  
+     （示例：优化资源分配以应对增长的工作负载。）
+
+2. **Modularity (模块化)**
+   - **Is the architecture modular?**  
+     （架构是否模块化？）
+   - **Example**: Support for independent updates, maintenance, and parallel development.  
+     （示例：支持独立更新、维护和并行开发。）
+
+3. **Integration (集成性)**
+   - **Can the system handle complex integrations?**  
+     （系统是否能够处理复杂集成？）
+   - **Example**: Integrate with various hardware and software seamlessly.  
+     （示例：与各种硬件和软件无缝集成。）
+
+4. **Performance (性能)**
+   - **Can the system handle computationally-intensive tasks?**  
+     （系统是否能够处理计算密集型任务？）
+   - **Example**: Utilize scalable data storage solutions.  
+     （示例：使用可扩展的数据存储解决方案。）
+
+5. **Reliability and Fault Tolerance (可靠性与容错)**
+   - **Can the system handle hardware/software failures?**  
+     （系统是否能应对硬件/软件故障？）
+   - **Example**: Design for high availability and fault tolerance.  
+     （示例：设计高可用性和容错性。）
+
+6. **Security and Privacy (安全与隐私)**
+   - **What security measures protect the system and data?**  
+     （有哪些安全措施保护系统和数据？）
+   - **Example**: Implement encryption, access control, and secure data management.  
+     （示例：实施加密、访问控制和安全的数据管理。）
+
+7. **User Interaction/Experience (用户交互/体验)**
+   - **Are the UI/UX considerations effective?**  
+     （UI/UX 考量是否有效？）
+   - **Example**: Ensure intuitive design and responsive interfaces.  
+     （示例：确保直观的设计和响应式界面。） 
+
+**II. 规划与设计：设计考量**  
+
+- **UI/UX是否得到正确利用？**  
+  - 用户体验（UX）设计过程包括阶段：研究、共情、创建、测试和开发。  
+    （The user experience (UX) design process includes phases: research, empathize, create, test, and develop.）  
+  - 有效的UX/UI应该通过关注视觉设计、品牌形象、布局和交互性来增强可用性、参与度和用户满意度。  
+    （Effective UX/UI should enhance usability, engagement, and user satisfaction by focusing on visual design, branding, layout, and interactivity.）  
+
+**II. 规划与设计：技术与工具**  
+
+- **根据需求选择合适的技术和工具：**  
+  （Choosing the right technologies and tools based on requirements:）  
+  - **传感器和物联网（IoT）：** 将数据流传输到认知系统。  
+    （Sensors and Internet of Things (IoT): streams data to the cognitive system.）  
+  - **云计算：** 提供数据存储和计算分析功能。  
+    （Cloud Computing: provides data storage and computational analysis.）  
+  - **认知API：** 包括视觉、语音和语言处理。  
+    （Cognitive APIs: includes vision, speech, and language processing.）  
+
+- **本地部署与云解决方案：** 不同的服务层次提供不同的控制和管理程度，包括IaaS（基础设施即服务）、PaaS（平台即服务）和SaaS（软件即服务）。  
+  （On-Premises vs. Cloud Solutions: Different service levels provide various degrees of control and management, including IaaS (Infrastructure as a Service), PaaS (Platform as a Service), and SaaS (Software as a Service).）  
+  - **本地部署：** 完全控制基础设施和应用程序。  
+    （On-Premises: Complete control over infrastructure and applications.）  
+  - **IaaS：** 提供通过互联网访问的虚拟化计算资源。  
+    （IaaS: Provides virtualized computing resources accessed over the internet.）  
+  - **PaaS：** 用于开发、运行和管理应用程序的平台。  
+    （PaaS: A platform for developing, running, and managing applications.）  
+  - **SaaS：** 通过互联网访问的软件应用程序。  
+    （SaaS: Software applications accessed over the internet.）  
+
+**认知计算技术：认知API**  
+（**Cognitive Computing Technologies: Cognitive APIs**）  
+
+- 认知API在不同平台上提供服务，例如Google Cloud、AWS和Azure，具备以下功能：  
+  （Cognitive APIs provide services on different platforms, such as Google Cloud, AWS, and Azure, with the following capabilities:）  
+  - **数据存储和管理：** 包括云存储、数据库和数据处理。  
+    （Data storage and management: Includes cloud storage, databases, and data processing.）  
+  - **网络和安全：** 为安全数据传输和网络提供工具。  
+    （Networking and security: Provides tools for secure data transmission and networking.）  
+  - **AI和机器学习模型：** 现成的视觉、语言和数据分析模型。  
+    （AI and Machine Learning models: Ready-made models for vision, language, and data analytics.）  
+  - **开发工具和基础设施：** 支持应用程序开发和与云基础设施集成的资源。  
+    （Development tools and infrastructure: Resources that support application development and integration with cloud infrastructure.）  
+
+- **常见API服务包括：**  
+  （**Common API Services Include:**）  
+  - **视觉API：** 分析图像和视频以检测对象、面部和情绪。  
+    （Vision API: Analyzes images and videos to detect objects, faces, and emotions.）  
+  - **语音API：** 实现语音转文本、文本转语音，并分析音频信息。  
+    （Speech API: Enables speech-to-text, text-to-speech, and audio analysis.）  
+  - **语言处理API：** 处理和理解自然语言，包括翻译和情感分析。  
+    （Language Processing API: Processes and understands natural language, including translation and sentiment analysis.）  
+  - **数据和知识API：** 访问结构化和非结构化数据，执行知识提取，并支持决策。  
+    （Data and Knowledge API: Accesses structured and unstructured data, performs knowledge extraction, and supports decision-making.）  
+
+- **主要平台：**  
+  （**Main Platforms:**）  
+  - **Google Cloud Platform：** 提供机器学习服务、大数据分析和云存储。  
+    （Google Cloud Platform: Offers machine learning services, big data analytics, and cloud storage.）  
+  - **AWS服务：** 综合的计算、存储、数据库和AI的API套件。  
+    （AWS Services: A comprehensive suite of computing, storage, database, and AI APIs.）  
+  - **Azure认知服务：** 提供用于视觉、语音、语言和决策任务的工具，便于开发认知系统。  
+    （Azure Cognitive Services: Provides tools for vision, speech, language, and decision-making tasks, facilitating cognitive system development.）  
+
+
+
+## 6.3 Knowledge Representation
+
+**III. 知识表示：模型创建**  
+
+1. 定义目的和范围。  
+   （Define purpose and scope.）  
+2. 收集相关的数据源。  
+   （Collect relevant data sources.）  
+3. 开发初始概念框架（例如，顶级类别）。  
+   （Develop initial concept framework (e.g., top-level categories).）  
+4. 通过添加子类别、专家反馈来完善结构。  
+   （Refine the structure by adding subcategories and feedback from domain experts.）  
+5. 实施并用实际数据填充模型。  
+   （Implement and populate the model with actual data.）  
+6. 评审和维护。  
+   （Review and maintenance.）  
+
+**III. 知识表示：工具**  
+
+- Synaptica的Graphite概念管理器用于知识结构化。  
+  （Synaptica's Graphite Concept Manager for knowledge structuring.）  
+- Tealium的PostParty可视化工具，支持概念关联。  
+  （Tealium's PostParty visualization tool supports concept relationships.）  
+- Stanford的Protege是一种广泛使用的知识表示工具。  
+  （Stanford's Protege is a widely-used knowledge representation tool.）  
+- Neo4j图数据库允许图形化存储和查询知识数据。  
+  （Neo4j Graph Database allows for graphical storage and querying of knowledge data.）  
+
+**III. 知识表示：整合领域知识**  
+
+- 知识工程：使用结构化流程和方法提取和表示知识。  
+  （Knowledge Engineering: Uses structured processes and methodologies to extract and represent knowledge.）  
+- 机器学习和分析：通过有监督和无监督学习从数据中提取模式。  
+  （Machine Learning and Analytics: Extracts patterns from data through supervised and unsupervised learning.）  
+- 分类法/本体/语义网络：定义概念之间的层次关系和链接。  
+  （Taxonomies / Ontologies / Semantic Networks: Defines hierarchical relationships and links between concepts.）  
+- 群众外包：利用大群体的协作来整合新知识。  
+  （Crowdsourcing: Leverages large groups for collaborative knowledge integration.）  
+
+**III. 知识表示：知识工程的流程**  
+
+- 知识获取：收集和整理领域知识。  
+  （Knowledge Acquisition: Collects and organizes domain knowledge.）  
+- 表示和推理：将知识转换为计算机可处理的格式。  
+  （Representation and Reasoning: Transforms knowledge into a machine-processable format.）  
+- 验证和应用：确保模型的准确性并应用于实际问题。  
+  （Validation and Application: Ensures model accuracy and applies it to real-world problems.）  
+
+**III. 知识表示：机器学习和分析**  
+
+- 有监督和无监督学习：通过特征选择和提取进行建模。  
+  （Supervised and Unsupervised Learning: Models through feature selection and extraction.）  
+- 特征工程：选择和创建对模型有效的特征。  
+  （Feature Engineering: Selects and creates effective features for the model.）  
+
+**III. 知识表示：分类法/本体/语义网络和群众外包**  
+
+- 分类法和本体结构有助于系统推理和发现新的见解。  
+  （Taxonomies and ontology structures facilitate system reasoning and new insights discovery.）  
+- 群众外包允许大量用户参与知识整合。  
+  （Crowdsourcing allows a large number of users to participate in knowledge integration.）  
+
+## 6.4 System Development
+
+**IV. 系统开发**  
+
+- 数据收集和准备：收集并准备数据以供模型使用。  
+  （Data Collection and Preparation: Collect and prepare data for model usage.）  
+- 构建机器学习模型：使用收集到的数据构建机器学习模型。  
+  （Building Machine Learning Models: Use collected data to build machine learning models.）  
+- 开发用户界面：创建用户交互界面。  
+  （Developing User Interface: Create user interaction interfaces.）  
+
+**IV. 系统开发：数据收集**  
+
+- 内部数据：现有组织数据，私密。  
+  （Internal data: existing organization data; private.）  
+- 外部数据：公开可用的数据。  
+  （External data: publicly available data.）  
+- 生成数据：使用模拟或合成数据。  
+  （Generated data: simulations or synthetic datasets.）  
+- 群众外包数据：例如使用Amazon Mechanical Turk收集由人类生成或标记的数据。  
+  （Crowdsourced data: e.g., using Amazon Mechanical Turk for human-generated or labeled data.）  
+- 自动化数据收集：如网络抓取、物联网传感器、API数据提取。  
+  （Automated data collection: e.g., web scraping, IoT sensors, API data extraction.）  
+
+**IV. 系统开发：数据质量**  
+
+- 数据是否准确？  
+  （Is the data accurate?）  
+- 数据是否完整？（缺失值等）  
+  （Is the data complete? (missing values, etc.)）  
+- 数据是否一致？（数据格式、标签、缩放等）  
+  （Is the data consistent? (data formatting, labels, scaling, etc.)）  
+- 数据是否是最新的？  
+  （Is the data up-to-date?）  
+
+**IV. 系统开发：数据预处理**  
+
+1. 数据清洗  
+   - 缺失数据：替换缺失值（如插补、均值、中位数）或使用能够处理缺失数据的算法。  
+     （Missing data: replace missing data (e.g., imputation, mean, median) or use algorithms that can handle missing data.）  
+   - 异常值：使用统计方法识别并删除异常值。  
+     （Outliers: identify outliers using statistical methods and remove them.）  
+
+2. 数据转换  
+   - 归一化和缩放：缩放数据范围（如$$[0,1]$$，$$[-1,1]$$）。  
+     （Normalization and Scaling: scale data ranges (e.g., $$[0,1]$$, $$[-1,1]$$).）  
+   - 特征编码：将分类数据转换为数值形式，如使用独热编码。  
+     （Feature Encoding: convert categorical data to numerical using one-hot encoding.）  
+
+3. 特征工程  
+   - 创建新特征  
+     （Create new features）  
+   - 降维：使用PCA或t-SNE。  
+     （Dimensionality reduction: using PCA or t-SNE.）  
+
+4. 数据增强  
+   - 增加数据样本的数量和多样性：如使用旋转、缩放、裁剪等方式。  
+     （Increase number & variety of data samples: e.g., using rotation, zoom, crop, etc.）  
+   - 减少类别不平衡：如使用欠采样、过采样、SMOTE。  
+     （Reduce class imbalance: e.g., using undersampling, oversampling, SMOTE.）  
+
+5. 数据分区  
+   - 将数据分为训练集、测试集和验证集。  
+     （Data Partitioning: Divide into train-test-validate sets.）  
+
+**IV. 系统开发：选择机器学习算法**  
+
+- 确定需要完成的任务类型：  
+  - 分类：支持向量机（SVM）、决策树、随机森林、神经网络。  
+    （Classification: SVM, decision tree, random forest, neural nets.）  
+  - 回归：线性回归、套索回归、神经网络。  
+    （Regression: linear regression, lasso, neural nets.）  
+  - 聚类：K均值、层次聚类。  
+    （Clustering: k-means, hierarchical clustering.）  
+  - 序列预测：循环神经网络（RNN）、长短期记忆网络（LSTM）。  
+    （Sequence prediction: recurrent neural networks, LSTM.）  
+- 考虑算法的可扩展性、可解释性和效率。  
+  （Consider scalability, explainability, and efficiency.）  
+
+**IV. 系统开发：训练、测试、评估**  
+
+- 确保使用正确的方法。  
+  （Are you using the correct methodology?）  
+- 确保使用正确的评估指标。  
+  - 分类问题：准确率、精确率、召回率、F1分数、ROC、AUC。  
+    （Classification metrics: Accuracy, Precision, Recall, F1 score, ROC, AUC.）  
+  - 回归问题：均方误差（MSE）、均方根误差（RMSE）、平均绝对误差（MAE）。  
+    （Regression metrics: Mean Squared Error (MSE), Root Mean Squared Error (RMSE), Mean Absolute Error (MAE).）  
+
+**IV. 系统开发：UI / UX**  
+
+- 设计直观的用户界面  
+  （Design intuitive user interfaces）  
+- 遵循屏幕阅读器友好的设计准则  
+  （Follow accessibility guidelines for screen readers）  
+
+**IV. 系统开发：自然语言处理（NLP）**  
+
+- 引入自然语言处理功能以提升用户体验：  
+  - 智能助手、聊天机器人、情感分析、语言翻译、电子邮件过滤、文本摘要、预测文本。  
+    （Incorporate NLP capabilities like smart assistant, chatbots, sentiment analysis, language translation, email filtering, text summarization, predictive text.）  
+
+## 6.5 Deployment and Evaluation
+
+**V. 部署与评估**  
+
+- 部署策略  
+  - 选择合适的测试类型和策略，包括手动、自动化和连续性测试，确保系统的每个功能和非功能需求得到满足（Deployment strategies: Choose appropriate types of testing, including manual, automated, and continuous testing, to ensure all functional and non-functional requirements are met.）  
+
+- 渐进式发布  
+  - 工程、产品和设计团队合作进行逐步发布和反馈循环，通过收集用户和性能反馈来不断改进（Gradual Rollout: Engineering, Product, and Design teams collaborate on gradual release and feedback loops, using user and performance feedback to iteratively improve.）  
+
+**V. 部署策略：集成**  
+
+- 数据集成  
+  - 从不同类型和来源中合并数据（Data Integration: Combine data from different types and sources.）  
+
+- 软件和平台集成  
+  - 将系统与遗留系统、客户关系管理（CRM）软件、企业资源计划（ERP）系统等进行集成，以确保不同应用和操作系统之间的通信（Software and Platform Integration: Integrate with legacy systems, CRM, ERP, and other tools to enable communication between different applications and operating systems.）  
+
+- 过程集成  
+  - 优化业务流程，减少冗余并提高效率（Process Integration: Optimize business processes to reduce redundancies and improve efficiency.）  
+
+- 数据操作流程（Extract, Transform, Load，ETL）  
+  - 从不同源提取、转换并加载数据到数据库中（Extract, Transform, Load (ETL): Extract data from different sources, transform as needed, and load into a database or data warehouse.）  
+
+- 数据复制和流数据集成  
+  - 确保数据库中数据副本的完整性，并进行实时流数据集成，以实现连续的数据分析（Data Replication and Streaming Data Integration: Ensure data consistency across replicated databases, and integrate streaming data for continuous analysis.）  
+
+- 标准化  
+  - 使用标准和协议来简化数据格式、通信和安全，确保系统兼容性（Standardization: Use standards and protocols for data formats, communication, and security to ensure system compatibility.）  
+
+- 微服务架构  
+  - 采用微服务架构以提升系统模块化和易集成性（Microservices: Use microservices architecture to enhance modularity and ease integration.）  
+
+- 模块化设计  
+  - 通过逐步整合的方式来减少复杂性和对现有系统的干扰（Modularity: Incremental integration to reduce complexity and minimize disruption to existing operations.）  
+
+**V. 部署与评估：性能分析**  
+
+- 实施监控工具来跟踪系统的性能和健康状况，例如响应时间、错误率、系统吞吐量和用户参与度。（Implement monitoring tools to track the system’s performance and health: i.e., response times, error rates, system throughput, and user engagement.）
+
+- 服务水平协议（SLA）性能指标包括：服务正常运行时间、响应时间、分辨率时间、平均处理时间（AHT）、自助服务解决的数量、在SLA时限内解决的工单数量、首次解决率和工单升级级别。（Service Level Agreement (SLA) performance metrics include: service uptime, response time, resolution time, Average Handling Time (AHT), number of successful self-serve resolutions, tickets resolved within SLA timeframes, first-time resolution rate, and ticket escalation levels.）
+
+- 关键指标示例包括净推荐值（NPS）、用户粘性、流失率、社交媒体倾听、渠道客户满意度评分、转化率、平均会话持续时间和第一周的用户参与度。（Key metrics examples include Net Promoter Score (NPS), stickiness, churn rate, social media listening, customer satisfaction rating by channel, conversion rate, average session duration, and first-week engagement.）
+
+**认知系统评估**  
+
+- 准确性、精确度、召回率等（Accuracy, Precision, Recall, etc.）
+- 可用性测试（Usability Testing）
+- 压力测试（Stress Testing）
+- 自主学习（Self-Learning）
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

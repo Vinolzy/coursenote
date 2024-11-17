@@ -794,3 +794,269 @@ $$
 
 **Popular packages** 
 列出了一些流行的解释包，例如 **shap**、**lime**、**captum**、**innvestigate** 等，并展示了其 GitHub 星标数，说明其受欢迎程度。
+
+
+# 4 Evaluating explanations
+
+**现在，放眼全局**  
+
+- 各种算法尽管多样，但都旨在实现一个目的：**识别有影响力的特征**  
+- 我们如何测试哪些方法最有效地做到这一点？  
+
+**需要考虑的问题**  
+
+- 我们是否需要事先知道什么是重要的？  
+- 解释应当反映模型认为重要的内容，还是人类认为重要的内容？  
+- 我们的性能指标是否与特定的解释方法对齐？
+
+**设置**  
+
+- 假设一个模型 $$f(x)$$  
+  - 分类器，以类别 $$y$$ 的概率 $$f_y(x)$$  
+- 假设一个解释算法  
+  - 局部解释（例如：RISE）  
+  - 全局解释（例如：置换测试）  
+  - 返回每个特征 $$x_i$$ 的分数 $$a_i \in \mathbb{R}$$  
+
+## 4.1.1 Sanity checks
+
+**合理性检查**  
+
+- 合理性检查 = 用于识别明显问题的基本测试（Sanity check = basic test to identify obvious issues）  
+  - 例如，用一个小列表测试排序算法，或用一些添加/删除操作测试数据结构（e.g., test a sorting algorithm with a small list, or a data structure with a few addition/deletion operations）  
+- 对于解释算法，哪些合理性检查是好的？（What are good sanity checks for an explanation algorithm?）
+
+**XAI的合理性检查**  
+
+- 解释是否具有定性意义？（Does the explanation make qualitative sense?）  
+- 它是否依赖于数据？（Does it depend on the data?）  
+- 它是否依赖于模型？（Does it depend on the model?）
+
+**定性评估**  
+
+- 通过不同梯度方法比较解释的合理性，方法包括：Vanilla、Integrated、Guided BackProp和SmoothGrad，其中SmoothGrad表现得更合理（Comparison of explanations through various gradient methods, including Vanilla, Integrated, Guided BackProp, and SmoothGrad, with SmoothGrad appearing more reasonable）  
+
+**数据依赖性**  
+
+- 解释对数据有明确的依赖性。不同的输入图像在预测和解释图像之间存在显著差异，表明模型在输出解释时高度依赖输入数据（The explanation clearly depends on the data. Different input images show significant variation between the predicted and explained images, indicating a strong data dependency in the model's explanation）  
+
+**模型依赖性**  
+
+- 解释对模型依赖性明显。不同的模型结构（如VGG16和ResNet-18）在Grad-CAM解释结果上显示显著差异，表明模型架构对解释影响较大（The explanation clearly depends on the model. Different model architectures, such as VGG16 and ResNet-18, show significant differences in Grad-CAM explanation results, highlighting the influence of model architecture on explanations）  
+
+**随机化测试**  
+
+- 对先前检查的扩展，通过对模型或数据进行随机化后比较解释。解释应发生显著变化，但有些方法变化不明显（Scaled-up version of previous checks by comparing explanations after model or data randomization. Explanations should change significantly, but some methods show minimal change）  
+
+**模型随机化**  
+
+- 使用深度神经网络（Inception-v3架构），通过在特定层中随机化参数来评估解释的可靠性（Using a deep neural network (Inception-v3 architecture), parameters are randomized in specific layers to assess the robustness of explanations）  
+  - 从最终层开始逐步随机化，依次应用到更早的层，这一过程称为“级联随机化”（Starting from the final layer and progressively applying randomization to earlier layers, termed "cascading randomization"）  
+
+- 结果：随着层的逐步随机化，不同解释方法（如Grad-CAM、Integrated Gradients等）对模型解释的影响发生显著变化。这些方法在不同的随机化程度下展示了不同的表现，揭示了模型结构在解释质量中的作用（Results: As layers are randomized step-by-step, various explanation methods (e.g., Grad-CAM, Integrated Gradients) show significant changes in their effectiveness. Performance varies across levels of randomization, highlighting the role of model structure in explanation quality）
+
+**数据随机化**  
+
+- 思路：通过随机标签重新训练模型，将标签随机分配，从而迫使新模型使用不同的信号（Idea: retrain the model with randomized labels to ensure the new model relies on different signals by assigning labels randomly）  
+  - 在随机标签训练的模型中，解释图显示与原始模型不相关的特征，这验证了数据随机化对解释的显著影响（In models trained on randomized labels, explanation maps show uncorrelated features compared to the original model, confirming a significant impact of data randomization on explanations）  
+
+**备注** 
+
+- 优点：  
+  - 合理性检查简单，能够排除不合理的方法（Sanity checks are simple, effective in ruling out flawed methods）  
+  - 可以作为深入研究前的初步步骤（Useful as a preliminary step before more in-depth analysis）  
+- 缺点：  
+  - 检查通常不是定量的（Checks are often not quantitative）  
+  - 很少涉及解释的准确性（Provides limited insight into the correctness of explanations）  
+
+
+## 4.1.2 Ground truth comparisons
+
+**真实重要性的对比**  
+
+- 假设对“真正重要”的特征有先验知识（Assume prior knowledge of "truly important" features）  
+- 先验知识的来源包括：医生对医学图像的标注、非专业人士对自然图像的标注、生物学文献中已知与疾病相关的基因（Sources of prior knowledge include doctor annotations of medical images, non-expert annotations of natural images, and genes known to play a role in diseases from biology literature）  
+- 然后，将解释结果与真实值进行对比，以评估其准确性（Then, compare explanations to ground truth to assess accuracy）
+
+**对象定位**  
+
+- 通过显著性图生成边界框，并与真实边界框对比，重叠区域超过阈值则计为正确定位（Generate a bounding box from the saliency map and compare it to the ground truth bounding box, counting as correct if the overlap exceeds a set threshold）  
+- 生成边界框过程复杂，可能显著影响结果：  
+  - 一种简单方法是使用阈值显著性（如50%分位数）找到包含显著特征的最小边界框（A simple approach is to use threshold saliency (e.g., at 50% quantile) to find the smallest bounding box containing salient features）  
+  - Simonyan等人（2013）提出的改进方法通过显著特征比例来区分对象和背景，从而实现更好的分割（Simonyan et al. (2013) proposed an improved method by using salient feature ratios to distinguish object and background, achieving clearer segmentation）  
+- 尽管模型未针对定位进行专门训练（弱监督），许多方法仍能实现较低的定位错误率（Many methods achieve low localization error rates despite the models not being explicitly trained for localization ("weakly supervised")）
+
+**指点游戏**  
+
+- 一种更简单的定位任务，无需生成边界框，直接检查解释中最重要的像素是否落在真实边界框内（A simpler localization task that avoids generating bounding boxes by directly checking if the most important pixel in the explanation falls within the ground truth bounding box）  
+
+**放射学中的定位**  
+
+- 使用多个显著性方法对胸部X光片进行定位，通过专家评估模型在识别病变区域的准确性，以辅助诊断（Using multiple saliency methods to localize chest X-rays, with expert evaluation of the model's accuracy in identifying lesion areas to aid diagnosis）
+
+**用户研究**  
+
+- 通过多种方法生成解释，并让用户（通常在Mechanical Turk上）选择最优方法（Generate explanations using multiple methods and let users (often on Mechanical Turk) decide which is best）  
+  - 不同研究关注不同问题，如哪个解释更好、解释是否能够正确指示类别等（Different studies focus on questions like which explanation is better or whether the explanation accurately indicates the class）
+
+**合成数据集**  
+
+- 使用合成生成的数据可以控制真实值，确保模型和解释评估的可靠性（Synthetically generated data allows control over the ground truth, ensuring reliability in model and explanation evaluation）
+
+**真实值的挑战**  
+
+- 先验知识来源于人类，获取额外标注困难，且反映的是当前对世界的理解，可能会惩罚使用新信号的模型（Prior knowledge comes from humans, making it hard to obtain extra annotations, and reflects current world understanding, potentially penalizing models that use new signals）  
+  - 这些知识不一定来自专家，Mechanical Turk用户的标注可信度较低，医生的标注通常更可信（Not always derived from experts; Mechanical Turk users are less reliable, while doctor annotations are more trustworthy）
+
+**联合测试模型和解释**  
+
+- 为获得最佳结果，需满足两点：（For best results, two conditions are required:）  
+  1. 解释需正确识别模型的依赖关系（Explanations must correctly identify the model's dependencies）  
+  2. 模型应依赖“正确”信号，不应使用捷径或混杂因素（如图像背景）（The model must depend on the "correct" signals and avoid using shortcuts or confounders (e.g., image background)）  
+- 问题：差的结果可能是模型导致的，而真实值指标并未直接测试解释（Problem: poor results may be due to the model itself, as ground truth metrics don’t directly test the explanation）
+
+**数学视角**  
+
+- 在分类问题中，设 $$p(y | x)$$ 为真实的条件概率，假设输入为 $$x$$、标签为 $$y$$，我们可以检查特征 $$x_S$$ 是否满足以下条件（Consider a classification problem where $$p(y | x)$$ is the true conditional probability. Given input $$x$$ and label $$y$$, we can check if feature $$x_S$$ meets the conditions below）  
+  - 理想情况下，“真正重要”的特征 $$x_S$$ 应满足：  
+    - $$p(y | x_S) \approx 1$$（必要条件）（Necessary condition: $$p(y | x_S) \approx 1$$）  
+    - $$p(y | x_S) \approx 0$$（充分条件）（Sufficient condition: $$p(y | x_S) \approx 0$$）  
+
+- 假设 $$f_y(x) = p(y | x)$$，这是模型训练的隐含目标（Assume $$f_y(x) = p(y | x)$$, which is the implicit goal of model training）  
+- 然后，假设我们可以通过条件分布对特征进行边缘化处理：  
+  $$\mathbb{E}_{x_{\bar{S}}|x_S}[f_y(x)] = p(y | x_S)$$  
+  （Then, assume we can marginalize out features with their conditional distribution:  
+  $$\mathbb{E}_{x_{\bar{S}}|x_S}[f_y(x)] = p(y | x_S)$$）  
+- 这表明我们可以使用基于去除的方法来识别正确的特征 $$x_S$$（This suggests that we can use removal-based methods to identify the correct features $$x_S$$）
+
+**备注**  
+
+- 优点：  
+  - 真实值指标在某些使用案例中反映了XAI的目标，即识别数据中的真实关系（Ground truth metrics reflect the goal of XAI in some use cases: identifying true relationships in the data）  
+- 缺点：  
+  - 获取真实值困难且不完美（Obtaining ground truth is difficult and imperfect）  
+  - 为了获得好的结果，需要正确的解释和正确的模型（For good results, a correct explanation and a correct model are necessary）  
+
+## 4.2.1 Ablation metrics
+
+**消融度量**  
+
+- 假设我们可以使用保留特征来评估模型，重要性值暗示预测应如何变化（Assume we can evaluate models with held-out features, and importance values suggest how the prediction should change）  
+  - 删除重要特征应显著改变预测结果（Removing important features should significantly change the prediction）  
+- 思路：测试解释是否可以通过保留特征预测行为（Idea: test if explanations predict behavior with held-out features）
+
+**插入/删除**  
+
+- 按重要性 $$a_i$$ 对特征 $$x_i$$ 进行排序（Rank features $$x_i$$ by importance $$a_i$$）  
+  - 插入：按顺序添加特征，预测值应迅速上升（Insertion: add features in order of importance; prediction should go up quickly）  
+  - 删除：按顺序移除特征，预测值应迅速下降（Deletion: remove features in order of importance; prediction should drop quickly）  
+
+**多种可能的变化**  
+
+- 衡量不同的模型行为，例如预测概率、低概率、对数几率、准确性等（Measure different model behaviors, such as prediction probability, low-probability, log-odds, accuracy）  
+- 以不同方式移除特征（例如用0、随机噪声、数据集中的样本值），不同的移除方式会显著影响结果（Remove features in different ways (e.g., zeros, random noise, values sampled from the dataset), which can make a big difference in results）
+
+**特征选择的变化**  
+
+- 可以应用相同的思想来评估全局解释，通过移除重要或不重要特征进行模型再训练，观察准确性变化（Apply the same idea to evaluate global explanations by retraining models with the most or least important features and observing accuracy changes）  
+
+**移除并重训练（ROAR）**  
+
+- 模型通常无法处理缺失特征，思路是用重要特征掩码并重新训练模型，测试准确性是否下降（Models aren't made to handle missing features, so retrain with masked important features and test if accuracy drops）  
+- ROAR问题：  
+  - 重新训练多个模型成本高，不测试原模型解释的正确性（Retraining many models is costly and does not test the correctness of explanations for the original model）  
+  - 掩码训练易引入混杂因素，可能导致准确性虚高（Training with masks encourages confounders, yielding inflated accuracy）  
+  - 存在信息泄漏问题，掩码非随机，移除特征可能暗示类别标签（Information leakage issue; masking isn't random, and removed features may indicate the class label）
+
+**局限性**  
+
+- 主要关注重要性排序，但缺乏针对分数 $$a_i \in \mathbb{R}$$ 的精确测试方法（Focuses on importance rankings but lacks a precise way to test the importance scores $$a_i \in \mathbb{R}$$）
+
+**加性代理度量**  
+
+- 许多方法的得分是和为模型预测的加性代理（例如IntGrad, LRP），可以测试这些分数作为加性代理的准确性（Many methods have scores that sum as additive proxies for the model prediction (e.g., IntGrad, LRP); test the accuracy of importance scores as additive proxies）
+
+**Sensitivity-n**  
+
+- 测试代理与固定基数的随机子集的相关性，通过在集合 $$S \subset (1, ..., d)$$ 中计算相关性（Test the proxy’s correlation for random subsets with fixed cardinality, using correlation over $$S \subset (1, ..., d)$$ with $$|S| = n$$）  
+  - 公式为：$$\text{Corr} \left( f_y(x_S), \sum_{i \in S} a_i \right)$$  
+
+**可变基数版本**  
+
+- 计算相同的相关性，但使用不同基数的子集（Calculate the same correlation but with subsets of different cardinalities）  
+  - 需要对所有基数分布 $$p(S)$$，或者在所有基数上使用均匀分布（Require a distribution $$p(S)$$ over all cardinalities or use a uniform distribution over all $$S \subset \{1, ..., d\}$$）  
+  - 公式为：$$\text{Corr} \left( f_y(x_S), \sum_{i \in S} a_i \right)$$
+
+**相关度量**  
+
+- 插入/删除和Sensitivity-n等方法可用于衡量解释质量（Metrics like insertion/deletion and Sensitivity-n are used to assess explanation quality）  
+  - 示例包括Samek等人（2015）和Lundberg等人（2020）在插入/删除方法方面的工作，以及Alvarez-Melis等人（2018）在Sensitivity-n方面的研究（Examples include works by Samek et al. (2015) and Lundberg et al. (2020) on insertion/deletion and Alvarez-Melis et al. (2018) on Sensitivity-n）
+
+**特征移除的选择**  
+
+- 消融度量与基于移除的解释相似，提出相同的移除特征问题（Ablation metrics mirror removal-based explanations, posing the same question of how to remove features）  
+  - 重新训练会偏离原始模型，而随机替换值选择何种分布也存在挑战（Retraining diverges from the original model, and using random values poses challenges regarding distribution choice）  
+  - 边缘化处理具有条件依赖性，可实现部分输入的最优预测，但难以实现（Marginalizing with conditional dependency provides best-effort predictions with partial input but is hard to implement）
+
+- 度量的特征移除方式倾向于支持类似的解释方法。例如，使用插入/删除与零掩码时，SHAP使用零掩码优于SHAP的边缘分布（Feature removal choices in a metric favor similar explanations. For instance, using insertion/deletion with zeros masking makes SHAP with zeros outperform SHAP with marginal distribution）  
+
+**备注**  
+
+- 优点：  
+  - 消融度量测试解释是否符合模型的正确性，而不是人类的关注点（Ablation metrics test an explanation’s correctness for the model, rather than what’s important to humans）  
+  - 不需要额外的数据标注（No extra data annotation required）  
+- 缺点：  
+  - 如何移除特征的选择较难（Difficult choice of how to remove features）  
+  - 在某些情况下，不关注原始模型（例如ROAR）（In some cases, not focused on the original model, like ROAR）  
+
+## 4.2.2 Other criteria
+
+**鲁棒性**  
+
+- 对抗样本：一些不可察觉的微小变化可能会影响预测结果，这种现象在XAI中也被探索过（Adversarial examples: imperceptible changes that affect the prediction, explored in XAI）  
+- 解释是否对数据中的小变化具有鲁棒性？（Are explanations robust to small changes in the data?）  
+- 解释是否对模型中的小变化具有鲁棒性？（Are explanations robust to small changes in the model?）
+
+- 通过不同的解释方法（如Grad、IntGrad、LRP）测试对篡改模型的解释，展示了对抗性攻击对解释稳定性的影响（Testing explanations for a manipulated model with various methods (e.g., Grad, IntGrad, LRP), showing the impact of adversarial attacks on explanation stability）
+
+**超参数敏感性**  
+
+- 许多方法具有超参数选择，例如样本数量（LIME）、基线/移除方法（IntGrad）、超像素大小（遮挡）（Many methods have hyperparameter choices, such as number of samples (LIME), baseline/removal approach (IntGrad), superpixel size (occlusion)）  
+- 当一个参数对结果影响大且没有明确的“正确”选择时，会产生问题（Problematic when a parameter has a large impact on results and lacks a clear "right" choice）
+
+**人类效用**  
+
+- 解释的用途如何？需要明确使用场景（How useful is an explanation? Must specify the use-case）  
+  - 人类与AI团队合作场景，例如校准对模型决策的信心（Human-AI team setting, e.g., calibrating confidence in model decisions）  
+  - 科学研究场景，例如识别生物学假设以便后续验证，但难以大规模测试（Scientific setting, e.g., identifying biological hypotheses that are later verified, difficult to test at scale）  
+
+
+
+## 4.3 Conclusion
+
+**总结**  
+
+- 合理性检查：失败是不允许的，但许多方法会通过（Sanity checks: Failing these is not okay, but many methods will pass）  
+- 真实值比较：额外标注工作繁重，测试模型和解释的正确性，可能反映或不反映预期的用途（Ground truth comparisons: Extra annotations can be laborious; tests both model and explanation correctness, which may or may not reflect intended usage）  
+- 消融：测试解释对模型的正确性最好的选择，有多个优质度量如插入/删除、Sensitivity-n，但特征保留的选择较难（Ablations: Best option to test an explanation’s correctness for the model, several good metrics (insertion/deletion, sensitivity-n), tricky choice of how to hold out features）
+
+**何时使用这些度量？**  
+
+- 主要用于开发新方法时，证明其有效性并展示其优于先前方法的优点（Mainly when developing a new method to prove that it works and show benefits over prior methods）  
+- 还可用于新模型/数据集的选择，以验证实现选择的正确性（Additionally, when deciding what to use with a new model/dataset, to verify implementation choices）
+
+**观点**  
+
+- 没有错误的方法，但一些方法可能与用户问题不一致（No method is wrong, but some are misaligned with user questions）  
+  - 度量有效地将用户问题形式化，也可设计用于其他用户目标的度量（Metrics effectively formalize user questions; can design metrics for other user objectives as needed）  
+
+
+
+
+
+
+
+
+
+
+

@@ -1401,3 +1401,270 @@ app.kernel.do_shutdown(True)
 
 
 
+# 6 DEEP LEARNING FOR COMPUTER VISION
+
+## 6.1 Hidden Structure
+
+- 发现高维数据中的隐藏结构，即流形假设。（Discovering the hidden structure in high-dimensional data - the manifold hypothesis.）
+  - manifold hypothesis：它认为大多数现实世界的高维数据集大都靠近一个更低维的流形
+
+- 学习数据的表示：发现和分离独立的解释因素。（Learning representations of data: Discovering & disentangling the independent explanatory factors.）
+
+**The manifold hypothesis（流形假设）**
+
+- 自然数据存在于低维的非线性流形中，因为自然数据中的变量是相互依赖的。（Natural data lives in a low-dimensional (non-linear) manifold because variables in natural data are mutually dependent.）
+
+**Hidden Structure in high-dimensional data（高维数据中的隐藏结构）**
+
+- 示例：一个人的所有面部图像。（Example: all face images of a person.）
+  - $$1000 \times 1000$$ 像素的图像有 $$= 1,000,000$$ 维度。（A 1000x1000 pixel image has 1,000,000 dimensions.）
+  - 但面部只有 3 个笛卡尔坐标和 3 个欧拉角，并且人类面部肌肉少于 50 个，因此一个人的面部图像流形维度小于 56 维。（But the face has 3 Cartesian coordinates and 3 Euler angles, and humans have less than 50 muscles in the face, so the manifold of face images for a person has <56 dimensions.）
+  - 理想的特征提取器可以识别脸部的特征，包括姿势、光照和表情等。（The ideal feature extractor can identify facial features like pose, lighting, and expression.）
+
+**The perfect representations of a face image（面部图像的完美表示）**
+
+- 面部图像的完美表示包括：（The perfect representations of a face image include:）
+  - 在面部流形上的坐标。（Its coordinates on the face manifold.）
+  - 远离流形的坐标。（Its coordinates away from the manifold.）
+
+- 我们缺乏有效的通用方法来学习将图像转换为这种表示的函数。（We do not have good and general methods to learn functions that turn an image into this kind of representation.）
+
+**Disentangling factors of variation（分离变化因素）**
+
+- 理想的分离特征提取器可以识别像素变化因素，如视角、表情等。（The ideal disentangling feature extractor can identify factors of pixel variation like view, expression, etc.）
+
+**Data manifold & invariance: Some variations must be eliminated（数据流形与不变性：有些变化必须被消除）**
+
+- 方位-仰角流形，忽略光照因素 [Hadsell et al. CVPR 2006]。（Azimuth-Elevation manifold, ignores lighting [Hadsell et al. CVPR 2006].）
+
+## 6.2 Invariant Feature Learning
+
+- 不变特征：在平移、缩放或轻微变形等变换下保持稳定和可识别的特征。（Invariant features: features that remain stable and recognizable regardless of transformations such as translation, scaling, or slight distortions in the input image.）
+- 将输入非线性嵌入到高维空间中。在新的空间中，原本不可分的特征可能变得可分。（Embed the input non-linearly into a high (or) dimensional space. In the new space, things that were non-separable may become separable.）
+- 将新空间中的区域进行池化，将语义上相似的内容聚集在一起，例如池化操作。（Pool regions of the new space together - bringing together things that are semantically similar. Like pooling.）
+
+**Linear and Non-linear Relationship（线性与非线性关系）**
+
+| Aspect（方面）          | Linear Relationship（线性关系）                              | Non-Linear Relationship（非线性关系）                        |
+| ----------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Mathematical（数学）    | $$y = mx + b$$，直线（a straight line）                      | 任何保持$$f(x)$$平滑的函数，如指数、对数等。（any function that maintains $$f(x)$$ smooth, e.g., exponential, quadratic.） |
+| Graph Shape（图形形状） | 一条直线，常量斜率（A straight line, constant slope）        | 弯曲或波动的线，随着$$x$$的变化而变化的斜率（A curve or wave, slope changes with $$x$$） |
+| Complexity（复杂度）    | 简单性，可预测性（Simplicity, predictable）                  | 更复杂，难以预测（Complexity, less predictable）             |
+| Example（例子）         | 销售额 vs. 开支，距离 vs. 时间在恒定速度下（Sales vs. Expense, Distance vs. Time at constant speed） | 人口增长 vs. 速度，健康 vs. 年龄等（Population growth, Speed vs. fitness, Age vs. health） |
+
+**Linear Model - Classifying Cat vs. Dog（线性模型 - 猫狗分类）**
+
+- 设想你想要分类猫和狗的图像。线性模型可能无法分离来自图像的简单特征，如像素值或直方图。如果分类的边界是线性的（例如狗比猫更深的颜色），线性模型可以工作，但大多数情况下边界是非线性的，捕获这样的关系需要非线性特征提取。（Imagine you want to classify images of cats and dogs. A linear model might work if you extract simple features from the images, such as the average pixel intensity or color histograms. If the boundary is linear (e.g., dogs are darker and cats are lighter in color), a linear classifier might be adequate. However, in most cases, the boundary is non-linear, requiring nonlinear feature extraction to distinguish the two classes in the feature space.）
+
+**What is complex data?（什么是复杂数据？）**
+
+- 当输入特征和目标变量之间的关系是非线性、高维或存在噪声和时间序列时，数据被认为是复杂的。（Data is considered complex when there is an underlying relationship between the input features and the target variable being non-linear, intricate, or high-dimensional.）
+- 特点：非线性关系、维度高、具有噪声或随机变化、时间序列。（Characteristics: non-linear relationship, high dimensional features, has noise or random variation, time-series.）
+
+**Invariant Feature Learning（不变特征学习）**
+
+- 通过非线性函数处理输入特征，使其进入高维空间，生成不可分或不光滑的特征，然后通过池化或聚合实现稳定不变的特征。（Input features are processed through a non-linear function into a high-dimensional space, generating inseparable or unsmooth features, then achieving stable invariant features through pooling or aggregation.）
+
+**Entangled data manifolds（纠缠的数据流形）**
+
+- 一种情境，数据位于复杂的、高维的流形上，难以分解或分离。（A situation where the data is on a complex, high-dimensional manifold where disentanglement is difficult.）
+
+**Sparse non-linear expansion → pooling（稀疏非线性扩展→池化）**
+
+- 扩展为稀疏非线性特征，并通过池化或聚合操作进行简化。（Expanded into sparse non-linear features and simplified through pooling or aggregation operations.）
+
+**Overall architecture（总体架构）**
+
+- 多阶段堆叠：归一化 → 滤波器组 → 非线性 → 池化。（Stacking multiple stages of: Normalization → filter bank → non-linearity → pooling.）
+- 滤波器组：在过完备基上进行维度扩展、投影。（Filter bank: dimension expansion, projection on overcomplete basis.）
+- 非线性：稀疏化、饱和、侧抑制等。（Non-linearity: sparsification, saturation, lateral inhibition.）
+- 池化：在空间或特征类型上的聚合。（Pooling: aggregation over space or feature type.）
+  - $$X_{i} = L_{i}^{p} \approx PROD: \frac{1}{K} \log \left( \sum_{k=1}^{K} X_{i}^{M} \right)$$
+
+
+
+## 6.3 Deep Neural Network
+
+**Deep Neural Network（深度神经网络）**
+
+- 神经网络的每个节点进行线性运算 $$y = w^Tx + b$$ 后，通过激活函数（如sigmoid函数）处理输出。（Each node in the neural network performs a linear operation $$y = w^Tx + b$$ and applies an activation function, like the sigmoid function, to process the output.）
+
+**Training（训练）**
+
+- 给定训练集 $$E(w, b)$$，找到使 $$E = \sum ||y - \hat{y}||^2$$ 最小的参数。（Given training set $$E(w, b)$$, find parameters that minimize $$E = \sum ||y - \hat{y}||^2$$.）
+- 通过梯度下降迭代地更新权重 $$w$$。（Iteratively update weight $$w$$ using gradient descent.）
+
+**Gradient Descent（梯度下降）**
+
+- 梯度上升和梯度下降用于找到局部最优解。（Gradient ascent and gradient descent are used to find local optima.）
+- 目标是在多维空间中找到损失函数的最低点。（The goal is to find the lowest point of the loss function in a multidimensional space.）
+
+**Backpropagation（反向传播）**
+
+- 使用链式法则，向后传播误差导数，计算每个节点对误差的贡献 $$\delta$$。（Using chain rule, propagate error derivatives backwards to compute each node's contribution to error, $$\delta$$.）
+- 根据每个权重的导数值更新权重。（Update each weight using the derivative value with $$\delta$$.）
+- 注意消失梯度问题，尤其在深层神经网络中需要良好的初始化。（Be mindful of the vanishing gradient problem, good initialization is crucial for deep networks.）
+
+**Updating Weights（更新权重）**
+
+- **学习率** $$\eta$$：固定或自适应。（Learning rate, $$\eta$$: Fixed or Adaptive.）
+
+| Aspect（方面）            | Fixed（固定）                                                | Adaptive（自适应）                                           |
+| ------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Behavior（行为）          | 通过整个训练保持恒定的学习率。（Constant throughout training.） | 根据梯度历史自动调整学习率。（Automatically adapted based on gradient history.） |
+| Training Time（训练时间） | 需要更长的时间找到全局最优点。（Takes longer to converge to a global minimum.） | 学习率逐渐减小，以适应更大的数据集。（Leads to faster convergence as it adapts to larger datasets.） |
+| Complexity（复杂度）      | 简单，通常在小批次时有效。（Simple, works well with small batches.） | 复杂，适合较大的数据集和更深的网络。（More complex, suited for larger datasets and deeper networks.） |
+| Example（示例）           | SGD（随机梯度下降）                                          | Adam, RMSprop, Adagrad                                       |
+
+- **Momentum（动量）** $$\gamma$$：动量强迫梯度下降在之前方向上继续前进，公式为 $$V_t = \gamma V_{t-1} + \eta \nabla E$$。（Momentum forces Gradient Descent to keep moving in the previous direction: $$V_t = \gamma V_{t-1} + \eta \nabla E$$.）
+
+**Updating Weights（更新权重）**
+
+- 更新频率：
+  - 在每次训练示例后更新。
+  - 在每次训练批次完成后更新。
+  - 使用随机梯度下降时，收敛速度比小批次更快。
+  - GPU上计算效率更高。（Update frequency: after every training sample, mini-batch, or full batch. Stochastic gradient descent is faster in convergence than mini-batch, and computation is more efficient on GPUs.）
+
+
+
+**Regularization（正则化）**
+
+- 防止过拟合的方法：
+  - 权重衰减（Weight decay）
+  - 权重共享（Weight sharing）
+  - 提前停止（Early stopping）
+  - 模型平均（Model averaging，集成模型）
+  - 随机失活（Dropout）
+  - 预训练中的良好初始化（Good initialization in pre-training）
+  - 在训练数据中加入噪声（Adding noise to training data）
+
+**Weight decay（权重衰减）**
+
+- 在损失函数中根据模型权重的大小添加一个惩罚项。这一方法会抑制过大的权重，从而避免训练数据过拟合的复杂模型。（Adds a penalty to the loss function based on the size of the model's weights, discouraging overly large weights that could lead to complex models overfitting the training data.）
+
+**Weight sharing（权重共享）**
+
+- 在模型的多个部分中使用相同的权重，例如在卷积神经网络（CNN）中同一个卷积滤波器会应用于图像的不同区域。（Uses the same weights for multiple parts of the model, like in CNNs where the same convolutional filter is applied to different regions of an image.）
+
+**Early stopping（提前停止）**
+
+- 在训练过程中，模型在验证集上的性能被监控。一旦验证集上的性能停止提升或开始恶化，即使训练集上的性能还在提升，训练也会停止。（During training, the model is monitored on a validation set. Training stops as soon as the performance on the validation set stops improving or starts to degrade, even if it continues improving on the training set.）
+
+**Model averaging（模型平均，集成模型）**
+
+- 不仅仅使用单一模型，而是训练多个模型，将它们的预测结果进行平均或投票。常用的集成方法包括bagging（如随机森林）或boosting（如梯度提升）。（Instead of relying on a single model, multiple models are trained and their predictions are averaged or voted on. Techniques include bagging (e.g., Random Forest) or boosting (e.g., Gradient Boosting).）
+
+**Dropout（随机失活）**
+
+- 一种正则化技术，在训练过程中随机忽略一部分神经元（即“失活”），避免模型对单个神经元的依赖过强。（A regularization technique where, during training, randomly selected neurons are ignored (i.e., "dropped out") in each iteration, preventing the model from becoming overly dependent on any single neuron.）
+
+**Good initialization in pre-training（预训练中的良好初始化）**
+
+- 使用良好的初始化（例如PReLU或He初始化）可以防止梯度消失/爆炸，并在训练初期增强学习效果。（Proper initialization of weights, such as using PReLU or He initialization, can prevent issues like vanishing/exploding gradients and encourage better learning in the early stages of training.）
+
+**Adding noise to training data（在训练数据中加入噪声）**
+
+- 向训练数据中引入噪声或增加变换（例如对图像进行旋转、缩放、裁剪，或对输入数据添加随机噪声），可以显著增加训练集的多样性和模型的泛化能力。（Introducing noise or applying transformations to the training data (e.g., rotation, scaling, cropping for images, or adding random noise to inputs) artificially increases the size and variety of the training set.）
+
+**Training consideration（训练考虑）**
+
+- **非线性函数的选择**：
+  - Logistic 函数和 Tanh 函数存在饱和问题（梯度接近0导致收敛变慢）。
+  - ReLU（修正线性单元）：$$F(x) = \max(0, x)$$，非饱和，收敛更快。（Logistic function and Tanh → Saturation issue (slow convergence due to near-0 gradient). ReLU: $$F(x) = \max(0, x)$$, non-saturating and faster convergence.）
+
+- **损失函数**：Softmax 和交叉熵
+  - 通常使用平方误差损失的代替方案。
+  - 适用于表示概率分布。
+  - $$y_i = \frac{e^{x_i}}{\sum_j e^{x_j}}$$，$$E = -\sum_i y_i \log y_i$$。（Loss function → Softmax and cross-entropy. Normally used instead of squared error loss, appropriate for representing probability distribution.）
+
+**Input pre-processing（输入预处理）**
+
+- 零均值、单位方差的输入数据能更好地帮助优化模型，平滑误差面。
+- 通过标准化输入数据（零均值、单位方差）帮助模型：
+  - 使梯度优化更加高效和稳定。
+  - 平滑误差面，使梯度下降更快收敛。
+  - 保证算法对距离的依赖，平等地处理所有特征。
+  - 为含有特征惩罚的模型提供正则化效果。（Zero-mean, unit-variance input data yields better shaping of the error surface, facilitating gradient-based optimization and enabling fair regularization.）
+
+**Recap of the exercise（练习总结）**
+
+| Analysis（分析）                                             | Solution（解决方案）                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| CNN 提高了验证准确率，但训练准确率仍高于验证准确率。（CNN increased validation accuracy, still seeing training accuracy higher than validation.） | 清理后的数据效果更佳。数据集的多样性有助于模型泛化。（Clean data provides better examples, dataset variety helps the model generalize.） |
+
+## 6.4 Data Augmentation
+
+- 数据增强是指通过对训练图像进行各种变换来增加数据的多样性，帮助模型更好地泛化，防止过拟合。（Data augmentation refers to the technique of increasing the diversity of training data by applying various transformations to images, helping the model generalize better and preventing overfitting.）
+
+**Image Flipping（图像翻转）**
+
+- **水平翻转**（Horizontal Flip）：将图像沿水平轴翻转，使得图像左右反转。
+- **垂直翻转**（Vertical Flip）：将图像沿垂直轴翻转，使得图像上下反转。（Horizontal Flip: Flipping an image along the horizontal axis, creating a left-right inversion. Vertical Flip: Flipping along the vertical axis, creating an up-down inversion.）
+
+**Rotation（旋转）**
+
+- 对图像进行不同角度的旋转，比如90度、180度等，增加图像的多样性，使模型对方向更加鲁棒。（Rotating the image by various angles, such as 90, 180 degrees, etc., adds diversity to the dataset, helping the model become more robust to orientation changes.）
+
+**Zooming（缩放）**
+
+- 通过放大或缩小图像，产生不同的视图和尺度感，使得模型在不同尺度下仍能识别目标。（Zooming in or out to create views with varying scales, helping the model recognize objects at different scales.）
+
+**Width And Height Shifting（宽度和高度平移）**
+
+- 水平或垂直方向上对图像进行小幅度的平移，使得目标偏离中心，增加图像的空间变化。（Shifting the image slightly in the horizontal or vertical direction, so the object moves off-center, increasing spatial variation in the dataset.）
+
+**Homography（单应性变换）**
+
+- 通过仿射或透视变换，模拟不同视角下的图像。这种操作通常用于增加数据集的几何变化，增强模型的空间理解能力。（Applying affine or perspective transformations to simulate different viewpoints of the image, often used to add geometric variations to the dataset, enhancing the model's spatial understanding.）
+
+**Brightness（亮度调整）**
+
+- 调整图像亮度，使图像变亮或变暗，模拟不同的光照条件，提高模型对光照变化的鲁棒性。（Adjusting the brightness of the image to make it brighter or darker, simulating different lighting conditions and improving the model's robustness to illumination changes.）
+
+**Channel Shifting（通道偏移）**
+
+- 对图像的颜色通道（如红色、绿色、蓝色）进行调整，以生成颜色变化的图像，从而增强模型对颜色变化的适应性。（Shifting the color channels (e.g., red, green, blue) to create variations in color, enhancing the model's adaptability to color variations.）
+
+
+
+## 6.5 Model Deployment
+
+- 在模型部署的过程中，输入图像数据通过卷积神经网络的不同层进行特征提取和分类预测。
+
+- **卷积层处理**：
+  - 输入图像大小为 $$28 \times 28 \times 1$$。
+  - 使用不同的卷积核（例如 $$3 \times 3 \times 2$$）提取特征，将图像数据转化为特征图，并逐层处理，生成堆叠的特征表示。
+  - 最终的特征图被展平为向量，传递给全连接层进行预测。（In the convolution layer, input images (e.g., size $$28 \times 28 \times 1$$) are processed using various kernels (e.g., $$3 \times 3 \times 2$$) to extract features, resulting in stacked feature maps that are eventually flattened into a vector for the dense (fully connected) layers for final prediction.）
+
+- **全连接层**：
+  - 展平后的特征向量大小为 1568，输入到两个隐藏层，每层包含512个神经元，最后输出为24个类别的预测结果。（Flattened feature vector of size 1568 is passed through dense layers with 512 neurons each, leading to the final prediction of 24 output classes.）
+
+- **训练批次输入和池化操作**：
+  - 输入一批训练图像后，进行卷积和最大池化操作，以减少维度和提取主要特征。（After feeding a batch of training images, convolution and max pooling operations are applied to reduce dimensions and extract primary features.）
+
+- **预处理步骤**：
+  - **调整大小（Resize）**：将原始图像大小从（287, 433, 3）调整为（220, 155, 3），适应模型输入尺寸。
+  - **灰度化（Greyscale）**：将彩色图像转化为灰度图，使通道数从3变为1。
+  - **批量处理（Batch）**：将处理后的图像增加维度，形成批次数据，以便模型进行并行处理。（Resize: Adjusts the original image size (287, 433, 3) to (220, 155, 3) for model input size compatibility. Greyscale: Converts the color image to grayscale, reducing channels from 3 to 1. Batch: Adds a dimension to the processed image to create a batch, enabling parallel processing in the model.）
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

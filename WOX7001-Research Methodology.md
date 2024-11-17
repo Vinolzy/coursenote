@@ -423,3 +423,151 @@
   - **Google Scholar**：免费提供各领域的学术文章。
   - **Academia**：社交学术网络，允许研究者分享和交流研究成果。
 
+
+# Research Method in Computer Science
+
+<font color=blue>**Scientific Method**</font>
+
+**科学方法**（Scientific method）
+
+- 科学家通过观察和推理来开发技术，并以假设的形式提出对自然现象的解释。（Scientists use observations and reasoning to develop technologies and propose explanations for natural phenomena in the form of hypotheses.）
+- 从这些假设中得出的预测通过实验进行验证，从而进一步推动技术发展。（Predictions from these hypotheses are tested by experiment, leading to further technological developments.）
+- 任何足够严谨的假设都可以通过这种方式进行可重复的测试。（Any hypothesis that is cogent enough to make predictions can be tested reproducibly.）
+- 一旦假设被证实，它可能会演变成理论。（Once a hypothesis is confirmed, it may evolve into a theory.）
+
+**科学方法的要素**（Elements of Scientific Method）
+
+- **特征描述**：量化、观察和测量。（**Characterizations**: Quantifications, observations, and measurements.）
+- **假设**：对观察和测量的理论解释。（**Hypotheses**: Theoretical explanations of observations and measurements.）
+- **预测**：包括从假设和理论中得出的逻辑推理。（**Predictions**: Logical deductions from hypotheses and theories.）
+- **实验**：对所有上述内容的测试。（**Experiments**: Tests conducted to verify predictions.）
+
+**科学方法揭示...**（Scientific Method discovers...）
+
+- 理论会作出什么预测。（What predictions a theory makes.）
+- 在特定情境下正确的假设是什么。（The appropriate hypothesis for a particular situation.）
+- 应该进行什么样的实验。（The correct experiment to conduct.）
+
+**推导科学方法的过程**（The process involved in deriving the scientific method...）
+
+- **演绎推理**：从我们对世界的知识（理论）出发，预测“可能”的观察。（**Deductive reasoning**: Starts with theories or knowledge of the world and predicts likely observations.） 
+  示例：如果$$A \Rightarrow B$$且$$A$$已被观察到，那么我们也应该观察到$$B$$。这通常会带来新的知识。（Example: If $$A \Rightarrow B$$ and $$A$$ is observed, then $$B$$ should also be observed. This often leads to new knowledge.）
+
+- **溯因推理**：从观察到的现象推导其原因。（**Abductive reasoning**: Proceeds from observations to causes.） 
+  示例：现象$$X$$被观察到，在假设$$A, B, C, D$$中，只有$$A$$和$$B$$能够解释$$X$$，因此我们有理由假设$$A$$或$$B$$成立。对假设生成有用。（Example: Observing phenomenon $$X$$, and given hypotheses $$A, B, C,$$ and $$D$$, only $$A$$ and $$B$$ could explain $$X$$. Thus, we assume $$A$$ or $$B$$ holds. Useful for hypothesis generation.）
+
+- **归纳推理**：从一组观察中得出一个普遍结论。（**Inductive reasoning**: Generalizes from a set of observations to a broader conclusion.） 
+  示例：第谷·布拉赫通过收集火星运动的数据来帮助形成理论。（Example: Tycho Brahe collected data on Mars' movement, which was useful for forming theories.）
+
+**科学方法模型**（The model for scientific method）
+
+- **观察** → **归纳** → **理论或假设**  
+  - 如果预测未得到确认，则调整假设。（If predictions are not confirmed, refine the hypothesis.）
+  - 如果预测得到确认，则理论成立。（If predictions are confirmed, the theory holds.）
+
+- 从理论出发的**演绎**引出预测，通过进一步的观察来测试预测。（**Deduction** from theory leads to predictions, which are tested through further observations.）
+
+- 或者，从观察中**溯因**可以形成一个假设，导致新的事实和预测，随后通过测试验证。（Alternatively, **Abduction** from observations can form a hypothesis that leads to new facts and predictions, which are subsequently tested.）
+
+<font color=blue>**Research Classifier**</font>
+
+**研究视角**（Research Perspective）
+
+- **领域**：研究在主题层次结构中的位置。（**Field**: Position of the research within a hierarchy of topics.）  
+  示例：人工智能 → 自动推理 → 一阶推理 → 可判定性。（Example: Artificial Intelligence → Automated Reasoning → First-Order Reasoning → Decidability）
+
+- **方法**：研究过程中使用的研究方法。（**Approach**: Research methods that are employed as part of the research process.） 
+  示例：案例研究、实验、问卷调查、证明。（Examples: Case study, Experiment, Survey, Proof）
+
+- **性质**：纯理论发展或应用研究。（**Nature**: Pure theoretical development or applied research.）  
+  - 纯理论的回顾和其适用性的评估。（Review of pure theory and evaluation of its applicability.）
+  - 应用研究。（Applied research.）
+
+**研究分类**（Research Classification）
+
+- 纯理论（Pure Theory）
+- 描述性研究（Descriptive studies）
+- 探索性研究（Exploratory studies）
+- 解释性研究（Explanatory studies）
+- 因果研究（Causal studies）
+- 规范性研究（Normative studies）
+- 实证研究（Empirical research）
+- 问题解决研究（Problem solving studies）
+- 开发和应用研究（Development and application studies）
+
+<font color=blue>**Research Methods**</font>
+
+**研究方法**（Research Approach）
+
+- **定量研究方法**（Quantitative research methods） 
+  与数值测量相关，源自自然科学。用于检验假设或创建观察集以进行归纳推理。准确性和可重复性至关重要。（Associated with measurements on numeric scales, stemming from natural sciences. Used to test hypotheses or create a set of observations for inductive reasoning. Accuracy and repeatability of vital importance.）
+
+- **定性研究方法**（Qualitative research methods） 
+  包括案例研究和问卷调查，源自社会科学。关注于增加对某一领域的理解，而不是提供解释。通常存在可重复性问题。（Methods involving case studies and surveys, stemming from social sciences. Concerned with increasing understanding of an area rather than providing an explanation. Repeatability is usually a problem.）
+
+**研究方法**（Research Methods）
+
+- **行动研究**（Action research） 
+  同时追求行动（或变革）和理解。不断在行动和批判性反思之间交替，通过早期循环中的理解来改进方法、数据和解释。 
+  示例：反思性教学。（Example: Reflective teaching.）
+
+- **案例研究**（Case study） 
+  深入探索单一情境。通常生成大量的（主观）数据。应避免仅报告获得的数据或观察到的行为，而是尝试从观察到的情境细节中概括出一般性结论。 
+  示例：开源软件开发的案例研究。（Example: Case study of open source software development.）
+
+- **调查**（Survey） 
+  通常通过问卷或访谈进行。问卷和访谈设计很重要！样本大小和样本要素的确定也很重要！ 
+  示例：关于编程语言流行度或使用情况的调查。（Example: Survey on the popularity or use of programming languages.）
+
+- **实验**（Experiment） 
+  通过研究者控制的测试来调查因果关系。通常在开发、评估和问题解决项目中进行。 
+  示例：处理器性能评估。（Example: Evaluation of processor performance.）
+
+<font color=blue>**Research Paradigm**</font>
+
+**研究范式在计算机科学中 (Research Paradigm in CS)**
+
+- **经验范式 (Empirical)**: 计算机科学关注的是对一类现象的研究  
+- **数学范式 (Mathematical)**: 计算机科学关注算法和信息结构属性的研究（从实际对象抽象）  
+- **工程范式 (Engineering)**: 管理复杂软硬件系统的成本效益设计和构建（具有商业和社会价值）  
+
+**实验技术 (Experimental Techniques)**
+
+- 根据目标，可以使用各种评估技术 (Depending on the objective, various evaluation techniques shall be used)：  
+  - **定量测试 (Quantitative testing)**：算法/程序/数据库等的定量测试或实验  
+  - **可用性测试 (Usability tests with users)**：与用户进行的可用性测试  
+  - **问卷调查 (Questionnaires)**  
+  - **调查 (Surveys)**  
+  - **案例研究 (Case studies)**  
+
+- **参数 (Parameters)**  
+  - **运行时间 (Runtime)**：测试算法或系统的执行时间  
+  - **预处理时间 (Preprocessing time)**：测试数据或输入的预处理所需时间  
+  - **磁盘空间（开销） (Disk space, overhead)**：算法或系统需要的存储空间  
+  - **内存 (Memory)**：算法或系统所需的内存消耗  
+  - **结果的正确性 (Correctness of results)**：输出的准确性  
+  - **近似算法的准确性 (Accuracy of approximation algorithms)**：特别是对于近似算法，输出结果的精确度  
+  - **用户满意度 (User satisfaction)**：测试用户对系统或算法的满意度  
+  - **可用性 (Usability)**：系统或算法的易用性  
+
+**因此，为了实验我们需要数据集 (So, in order to experiment we need Data set)**
+
+- **现实数据 (Real-world data)**  
+  - 最好有现实数据 (Always good to have)：证明系统在实践中能运作  
+  - 获取困难 (Sometimes difficult to obtain)：有时很难获得  
+  - 局限性 (Do not allow to test all aspects of an algorithm/system)：无法测试算法/系统的所有方面  
+
+- **合成数据 (Synthetic data)**  
+  - 测试特定方面 (Allow to test specific aspects of the algorithm)：允许测试算法的特定方面  
+  - 生成困难 (Often very difficult to generate)：通常非常难以生成  
+  - 与竞争对手一致 (If possible, try to use the same data as your competitors)：如有可能，尽量使用与竞争对手相同的数据  
+
+- 在特定数据下容易表现出优越性 (It is easy to show that your approach is better if only very particular data is used)  
+
+- 描述数据的关键方面** (Describe the most important aspects of the data)**
+
+**实验后，比较解决方案 (After experiment, compare the solution - Benchmarks)**
+
+- 尽可能使用现有基准测试 (Use existing benchmarks as much as possible)
+
+- 便于比较不同解决方案 (Facilitates the comparison of different solutions)

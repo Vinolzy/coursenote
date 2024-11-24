@@ -1052,7 +1052,571 @@ $$
 
 
 
+# 5 Inherently interpretable models
 
+## 5.1 Introduction
+
+**Post-hoc explanations**
+
+- **过程**: 从世界获取数据，训练模型，提取解释，并将其传递给人类。(Process: Capture data from the world, train models, extract explanations, and deliver them to humans.)
+- **特点**: 通过后续分析对黑箱模型进行解释，以提高人类对模型输出的理解。(Post-hoc explanations analyze black-box models to improve human understanding of outputs.)
+
+---
+
+**Inherently interpretable models**
+
+- **过程**: 使用可解释性模型直接输出透明的预测，使人类可以理解。(Process: Use inherently interpretable models to provide transparent outputs that humans can understand.)
+- **特点**: 模型设计本身确保其可解释性。(The design ensures explainability.)
+
+---
+
+**Defining interpretability**
+
+- **含义**: 模型的“可解释性”可能有三种含义：(Interpretability may refer to:)
+  1. **可模拟性 (Simulatability)**：人类能否直观理解模型。(Can humans intuitively understand the model?)
+  2. **可分解性 (Decomposability)**：模型的每个部分是否具有直观意义。(Does each component have an intuitive meaning?)
+  3. **算法透明性 (Algorithmic Transparency)**：能否证明算法行为的某些性质。(Can we prove algorithmic properties?)
+
+---
+
+**Simulatability**
+
+- **描述**: 人类是否可以合理模拟模型的行为。(Description: Can humans reasonably simulate the model's behavior?)
+- **限制**:
+  - 定义因人而异，可能与领域相关。(Definitions are subjective and domain-specific.)
+  - 例如，无法心算50层ResNet，但可以理解简单线性模型。(For example, simulating a 50-layer ResNet is unreasonable, but a simple linear model is manageable.)
+
+---
+
+**Decomposability**
+
+- **问题**: 模型的每个组成部分是否有直观作用？(Question: Does each model component have an intuitive role?)
+- **示例**:
+  - 决策树中的每个分裂基于单一特征及其阈值。(Each split in a decision tree relies on a single feature and threshold.)
+  - 线性模型系数表示特征与结果间的关系强度。(Linear model coefficients represent the association strength between features and outcomes.)
+
+---
+
+**Algorithmic transparency**
+
+- **问题**: 能否证明学习算法的性质？(Question: Can we prove properties of learning algorithms?)
+- **应用**:
+  - 对线性模型已有许多理论研究。(Extensive research exists for linear models.)
+  - 深度模型的挑战：(Challenges for deep models include:)
+    1. 训练后模型的收敛行为。(Post-training convergence behavior.)
+    2. SGD对数据分布的影响及公平性问题。(The impact of SGD on data distribution fairness.)
+
+---
+
+**Why post-hoc explanations?**
+
+- **解释**: 在复杂性与可解释性之间权衡。(Explanation: Balances complexity and interpretability.)
+- **图示**: 模型的准确性越高，可解释性可能越低，反之亦然。(Diagram: Higher accuracy often reduces interpretability, and vice versa.)
+
+---
+
+**Is this tradeoff real?**
+
+- **现状**:
+  - 结构化数据（图像、文本、音频）：神经网络最优。(Neural networks excel with structured data (images, text, audio).)
+  - 表格数据：简单模型（线性回归、逻辑回归）也表现良好。(For tabular data, simpler models like linear/logistic regression perform well.)
+- **问题**: 复杂模型在简单场景中收益有限。(Problem: Complex models offer limited benefits in simple cases.)
+
+---
+
+**Why this tradeoff?**
+
+- **原因**:
+  - 可解释模型受约束，缺乏灵活性。(Interpretable models are constrained and inflexible.)
+  - 受限模型难以表示复杂关系。(Constrained models struggle to represent complex relationships.)
+  - 挑战领域（如计算机视觉、自然语言处理）中，可解释模型表现不佳。(In challenging fields like CV or NLP, interpretable models underperform.)
+
+---
+
+**Examples**
+
+- **模型约束**: 模型可能需要满足线性性、可加性、单调性、因果性等。(Models may be constrained to satisfy linearity, additivity, monotonicity, causality, etc.)
+- **常见示例**:
+  - 线性模型 (Linear models): 满足线性性。(Linearity.)
+  - 广义加性模型 (GAMs): 限制特征交互。(Limited feature interactions.)
+  - 决策树 (Decision trees): 二元特征分裂。(Binary feature splits.)
+
+---
+
+**Caveats**
+
+- **简单模型的局限性**:
+  - 如果使用人工设计特征，可能不可分解。(If they use engineered features, decomposability may be affected.)
+  - 如果特征过多，可能难以模拟。(If they use too many features, simulatability may decrease.)
+
+- **模型的复杂问题**:
+  - 模型使用的高级概念可能不直观。(What higher-level concepts does the model use?)
+  - 哪些训练样本对模型影响最大也可能不易明确。(Which training samples influenced the model most?)
+
+
+
+## 5.2 Linear regression
+
+**Linear regression**
+
+- **线性预测函数**: $$f(x) = \beta_0 + \beta_1x_1 + \cdots + \beta_dx_d$$  
+  (Linear prediction function: $$f(x) = \beta_0 + \beta_1x_1 + \cdots + \beta_dx_d$$)
+- **训练方法**: 通过最小化均方误差(MSE)进行训练：  
+  $$\mathcal{L}(\beta) = \sum_{i=1}^n \left(y^i - f(x^i)\right)^2$$  
+  (Trained by minimizing MSE: $$\mathcal{L}(\beta) = \sum_{i=1}^n \left(y^i - f(x^i)\right)^2$$)
+
+---
+
+**Interpreting a linear model**
+
+- **解释方法**: 通过学习的权重$$\beta$$及其置信区间解释。(Can interpret via learned weights $$\beta$$ and their confidence intervals.)
+- **作用**:
+  - 定量化特征重要性。(Quantify feature importance.)
+  - 模拟新输入的预测。(Mentally simulate prediction with new inputs.)
+  - 理解小变化的影响。(Understand the impact of small changes.)
+
+---
+
+**Lasso regression**
+
+- **修改方式**: 寻找最小特征集。(Modified approach: find minimal feature set.)
+- **损失函数**: 正则化损失函数：  
+  $$\mathcal{L}(\beta) = \frac{1}{n} \sum_{i=1}^n \left(y^i - f(x^i)\right)^2 + \lambda \sum_{j=1}^d |\beta_j|$$  
+  (Minimize a regularized loss function: $$\mathcal{L}(\beta) = \frac{1}{n} \sum_{i=1}^n \left(y^i - f(x^i)\right)^2 + \lambda \sum_{j=1}^d |\beta_j|$$)
+- **特点**: 鼓励模型将部分权重$$\beta_j$$置零，生成稀疏解。(Encourage model to set some weights $$\beta_j$$ to zero, producing a sparse solution.)
+
+---
+
+**Ridge regression**
+
+- **修改方式**: 通过岭惩罚进行正则化：  
+  $$\mathcal{L}(\beta) = \frac{1}{n} \sum_{i=1}^n \left(y^i - f(x^i)\right)^2 + \lambda \sum_{j=1}^d \beta_j^2$$  
+  (Regularize with ridge penalty: $$\mathcal{L}(\beta) = \frac{1}{n} \sum_{i=1}^n \left(y^i - f(x^i)\right)^2 + \lambda \sum_{j=1}^d \beta_j^2$$)
+- **特点**: 保留所有特征的相关性，但不会鼓励权重完全为零。(Useful properties but does not encourage weights to be exactly zero.)
+
+---
+
+**Remarks**
+
+- **优点**:
+  - 线性模型易于解释，可心算模拟。(Linear models are easy to interpret and mentally simulate.)
+  - 广泛使用，训练快速。(Widely used and fast to train.)
+- **缺点**:
+  - 限制多，某些任务中的预测性能较差。(Highly constrained, worse predictive performance for some tasks.)
+  - 当特征相关性较高时，解释变得困难。(Interpretation is challenging with correlated features.)
+
+
+
+## 5.3 Generalized additive models (GAMs)
+
+**GAMs**
+
+- **定义**: 广义加性模型(GAM)结合非线性单特征模型(形状函数)：  
+  $$f(x) = f_1(x_1) + \cdots + f_d(x_d)$$  
+  (Generalized additive models (GAMs) combine non-linear single-feature models (shape functions): $$f(x) = f_1(x_1) + \cdots + f_d(x_d)$$)
+- **常见形状函数**:
+  - 样条函数 (Splines)
+  - 树 (Trees)
+  - 线性函数 (Linear function = linear regression)
+
+---
+
+**Example result**
+
+- **描述**: 关联混凝土强度与年龄和成分。(Relating concrete strength to age and ingredients.)
+- **分析**:
+  - 样条函数揭示了水泥的线性关系。(Splines uncover linear relationships with cement.)
+  - 非线性函数揭示了水和空气的非线性关系。(Non-linear relationships with water and age.)
+
+---
+
+**More shape functions**
+
+- **新增选项**:
+  - 分段线性曲线。(Piecewise linear curves.)
+  - 深度模型。(Deep models.)
+- **描述**:
+  - 分段线性曲线使模型更加易读。(Piecewise linear curves improve human readability.)
+  - 深度模型可解释的广义加性模型。(Deep models for interpretable GAMs.)
+
+---
+
+**GA²Ms**
+
+- **定义**: GAMs扩展为包含交互项：(Definition: GAMs extended with interaction terms:)  
+  $$f(x) = \sum f_i(x_i) + \sum f_{ij}(x_i, x_j)$$
+- **作用**: 通过排名交互强度选择交互项并进行优化。(Rank interaction strength to decide which interactions to include.)
+
+---
+
+**Interactions boost accuracy**
+
+- **结果**: 学习排序数据集预测网站相关性。(Learning-to-rank dataset predicts website relevance.)
+- **分析**: 树状GA²M捕获了交互效果。(Interaction effects captured by tree-based GA²Ms.)
+
+---
+
+**Remarks**
+
+- **优点**:
+  - 比线性模型更灵活，涵盖更多模型。(More flexible than linear models, covers a wide range of models.)
+  - 可直接编辑模型参数，如政策场景中的再犯预测。(E.g., edit model parameters for recidivism prediction in policy scenarios.)
+- **缺点**:
+  - 忽略了更高阶的交互。(Ignores higher-order interactions.)
+  - 适合有限特征交互的场景。(Best for scenarios with limited feature interactions.)
+
+
+
+## 5.4 Decision trees
+
+**Decision trees**
+
+- **特点**:
+  - 简单的二元分裂。(Simple binary splits.)
+  - 内部节点: 基于单一特征和阈值进行划分。(Internal nodes partition on single features and thresholds.)
+  - 叶节点: 对样本进行预测。(Leaf nodes predict outcomes for samples.)
+- **优点**: 相对容易模拟。(Relatively easy to simulate.)
+- **缺点**: 分裂过多时可能变得复杂。(Can become difficult with more splits.)
+
+---
+
+**Decision/rule lists**
+
+- **定义**: 决策树的简化分支结构。(Decision trees with simplified branching structures.)
+  - 每个内部节点至少有一个叶节点。(For each internal node, at least one child must be a leaf.)
+  - 类似扩展的"if-elseif-else"规则。(Like extended "if-elseif-else" rules.)
+- **决策列表**: 是受限的决策树，更易解释。(Decision lists are constrained decision trees, easier to interpret.)
+
+---
+
+**Example**
+
+- **目标**: 预测用户是否喜欢职业体育。(Goal: Predict if a user "likes professional sports.")
+- **结构**:
+  - 使用年龄和其他条件分支，逐步作出判断。(Split based on age and other conditions step by step.)
+  - 决策列表的结构比复杂决策树更简单。(Simpler structure compared to complex decision trees.)
+
+---
+
+**CORELS**
+
+- **定义**: 可验证的最优规则列表。(Certifiably optimal rule lists.)
+  - 使用正则化经验风险优化特定类别模型。(Optimal for specific models based on regularized empirical risk.)
+  - 通过分支与界算法生成最优决策列表。(Branch and bound algorithm produces optimal decision lists.)
+- **优点**: 在灵活模型中桥接准确性差距。(Helps bridge accuracy gaps with more flexible models.)
+
+---
+
+**Recidivism prediction**
+
+- **应用**: 基于条件结合进行再犯预测。(Predict recidivism using a conjunction of conditions.)
+- **示例规则**: 条件组合如年龄和犯罪记录，推断再犯概率。(Rules like age and record combine to infer recidivism probability.)
+
+---
+
+**Remarks**
+
+- **优点**:
+  - CORELS通过复杂算法实现最优。(CORELS achieves optimality using complex algorithms.)
+  - 决策树和列表适合可解释性要求高的应用。(Decision trees and lists suit applications needing high interpretability.)
+- **缺点**:
+  - CORELS在处理大型数据集时较慢。(CORELS can be slow for large datasets.)
+  - 集成模型(随机森林、梯度提升树)在性能上更优，但可解释性较差。(Ensemble models (e.g., random forests, gradient boosting trees) outperform but are less interpretable.)
+
+---
+
+**Additional desiderata?**
+
+- **其他潜在标准**:
+  - 是否能调整特征以实现不同结果？(Can we adjust features to achieve different outcomes?)
+  - 能否确定隐藏特征对模型的影响？(Can we determine the impact of withholding certain features?)
+  - 是否易于修改模型以解决行为问题？(Is it easy to modify the model to fix undesired behaviors?)
+  - 是否能确定哪些数据点影响了模型预测？(Can we identify which data points influenced model predictions?)
+- **分析**: 某些模型支持上述操作，但并非所有模型都能实现。(Some models support these criteria, but not all can.)
+
+
+
+# 6 Interpretable complex models
+
+**Inherently interpretable models**
+
+- **特点**:
+  - 数据从世界中获取，通过模型学习后直接输出透明预测。(Data captured from the world, trained into a model, and directly outputs transparent predictions.)
+  - 示例: 线性模型可解释每个特征对输出的贡献。(Example: Linear models explain each feature's contribution to the output.)
+
+---
+
+**Interpretable complex models**
+
+- **目标**: 使复杂模型（如深度神经网络）变得更加可解释。(Goal: Make inherently complex models (e.g., DNNs) more interpretable.)
+- **方法**: 通过对复杂模型的特定设计或后处理步骤提升其可解释性。(Improve interpretability through specific designs or post-processing steps for complex models.)
+
+- **深度学习中的解释性增强方法**:
+  1. **全局平均池化的卷积神经网络(CNNs)**:
+     - 使用类别激活图(CAM)可视化输入对特定类别的贡献。(Use class activation maps (CAM) to visualize how inputs contribute to specific categories.)
+  2. **基于自注意力的Transformer**:
+     - 生成基于注意力机制的解释。(Generate attention-based explanations.)
+
+## 6.1 Class activation maps (CAM)
+
+**Class activation maps (CAM)**
+
+- **定义**: 针对卷积神经网络（CNNs）特定输出层的特征归因。(Built-in feature attribution for CNNs with specific output layers.)
+- **方法**: 结合全局平均池化(GAP)和线性层生成类别激活图。(Use global average pooling (GAP) followed by a linear layer to generate class activation maps.)
+- **作用**: 可视化图像中与特定分类相关的区域。(Visualizes regions in the image related to specific classes.)
+
+---
+
+**CNN architecture refresher**
+
+- **常见CNN架构**:
+  - AlexNet, VGG, ResNet, DenseNet。(Examples include AlexNet, VGG, ResNet, DenseNet.)
+- **组成部分**:
+  - 卷积层: 提取局部特征。(Convolutional layers: Extract localized features.)
+  - 最大池化层: 降采样特征。(Max-pooling layers: Downsample features.)
+  - 全连接层: 进行分类或回归。(Fully-connected layers: Perform classification or regression.)
+
+---
+
+**Layer types**
+
+- **卷积层**:
+  - 对每个位置应用核函数。(Apply kernel to each position.)
+  - 提取共享的局部特征。(Extract shared localized features.)
+- **最大池化层**:
+  - 计算局部窗口的最大值。(Calculate the max value within a sliding window.)
+  - 降低分辨率。(Downsample to lower resolution.)
+
+---
+
+**VGG architecture**
+
+- **特点**:
+  - 使用多层卷积和最大池化操作。(Uses multiple convolution and max-pooling operations.)
+  - 最终输出扁平化为向量。(Flattens the output into a vector.)
+- **优点**: 易于理解的分层结构。(Easily understood layered structure.)
+
+---
+
+**CNN output layers**
+
+- **挑战**: 卷积和池化层产生额外维度。(Conv and max-pool layers add extra dimensions.)
+- **解决方法**:
+  1. 扁平化为$$k \times w \times c$$的向量。(Flatten to vector of $$k \times w \times c$$.)
+  2. 对空间维度进行池化，生成长度为$$c$$的向量。(Pool along spatial dimensions to produce vector of length $$c$$.)
+- **后续步骤**:
+  - 应用全连接层和Softmax生成预测概率。(Apply fully-connected layers and Softmax to generate probabilities.)
+
+---
+
+**Global average pooling (GAP)**
+
+- **方法**:
+  - 对最后一层特征的空间平均值计算。(Calculate spatial average of last layer features.)
+  - $$A_k = \frac{1}{h \times w} \sum_{i,j} a_{ij}^k$$。(Formula: $$A_k = \frac{1}{h \times w} \sum_{i,j} a_{ij}^k$$.)
+- **优点**: 减少可学习参数，降低过拟合风险。(Fewer learnable parameters, reduces overfitting.)
+- **应用**: 广泛用于流行架构，如ResNet, DenseNet。(Widely used in popular architectures like ResNet, DenseNet.)
+
+---
+
+**Putting it together**
+
+- **步骤**:
+  - 卷积和池化生成张量$$A \in \mathbb{R}^{k \times w \times c}$$。(Conv + max-pooling generates tensor $$A \in \mathbb{R}^{k \times w \times c}$$.)
+  - GAP生成向量$$\hat{A} \in \mathbb{R}^c$$。(GAP generates vector $$\hat{A} \in \mathbb{R}^c$$.)
+  - 全连接层计算分类分数$$z_y$$。(Fully-connected layer computes class scores $$z_y$$.)
+  - 最后使用Softmax生成概率。(Finally, Softmax turns scores into probabilities.)
+
+---
+
+**Applied to final tensor A**
+
+- **应用步骤**:
+  - 将最终张量$$A$$压缩到GAP向量$$\hat{A}$$。(Final tensor $$A$$ is compressed into GAP vector $$\hat{A}$$.)
+  - 使用全连接层生成类别预测。(Fully-connected layer generates class predictions.)
+- **示例**: 在VGG架构中，最终张量长度为512。(In VGG architecture, final tensor length is 512.)
+
+---
+
+**CAM (Class Activation Maps)**
+
+- **思路**: GAP+全连接层视为对每个空间位置的单独预测。(GAP + FC layers viewed as averaging predictions for each spatial position.)
+- **公式**:
+  $$z_y = \sum_k w_k^y \hat{A}_k$$ (计算类的特征重要性)。(Feature importance for class calculated as $$z_y = \sum_k w_k^y \hat{A}_k$$.)
+
+---
+
+**Qualitative evaluation**
+
+- **可视化**: 使用CAM观察分类所依据的图像区域。(Use CAM to visualize image regions relevant to classification.)
+- **示例**: CAM展示图像中激活的特定区域。(CAM highlights specific regions in the image activated for a class.)
+
+---
+
+**Relationship with GradCAM**
+
+- **区别**:
+  - CAM使用全局平均池化和全连接层。(CAM uses GAP and FC layers.)
+  - GradCAM允许在无GAP的情况下操作。(GradCAM allows operations without GAP.)
+- **公式比较**: GradCAM中的重要性公式与CAM类似。(GradCAM importance formula is similar to CAM.)
+
+---
+
+**Spatial locality assumption**
+
+- **假设**: CAM/GradCAM假设内部特征图与原始输入空间相关。(Assume internal feature maps correspond to original input space.)
+- **限制**:
+  - 在深层网络中，后期层可能不满足空间局部性。(For very deep networks, later layers may not preserve spatial locality.)
+  - GradCAM可在中间层操作以保留局部性。(GradCAM operates in intermediate layers to retain locality.)
+
+---
+
+**CAM remarks**
+
+- **优点**:
+  - 在对象定位中表现强。(Strong performance in object localization.)
+  - 适用于特定架构，如使用GAP+全连接层。(Applicable for specific architectures like GAP + FC.)
+- **缺点**:
+  - 假设深层网络最后一层保持空间局部性，这在非常深的模型中可能失效。(Assumes spatial locality in final layer, which may fail in very deep models.)
+
+
+
+## 6.2 Attention as explanation
+
+**Attention**
+
+- **定义**: 在深度学习中使用一小部分特征生成预测。(Using a small portion of features to generate predictions in deep learning.)
+- **类比人类注意力**: 聚焦于视觉或听觉中的某些刺激。(Focus on certain stimuli, e.g., visual or auditory.)
+- **应用**:
+  - 通常在隐藏层中使用。(Typically used in hidden layers with internal features.)
+  - 无关注的特征值设置为零。(Features without attention are set to zero.)
+
+---
+
+**Attention in DL**
+
+- **核心作用**: 现代NLP和视觉模型的核心组件。(Core component of modern NLP and vision models.)
+- **硬注意力 vs 软注意力**:
+  - 硬注意力将值完全置零。(Hard: Multiply by exactly zero.)
+  - 软注意力通过梯度下降学习更容易。(Soft: Approximate zero, easier to learn via gradient descent.)
+- **关键问题**:
+  1. 如何计算注意力值？(How are attention values computed?)
+  2. 如何使用这些值？(How are these values used?)
+
+---
+
+**Self-attention example**
+
+- **过程**:
+  - 使用特征图生成注意力掩码，形状为$$[0,1]^{hw}$$。(Generate an attention mask from a feature map, shape $$[0,1]^{hw}$$.)
+  - 每个位置的特征值与掩码逐元素相乘。(Element-wise multiply feature values by the attention mask.)
+
+---
+
+**Self-attention**
+
+- **应用**:
+  - 在CNN中偶有使用。(Occasionally used in CNNs.)
+  - 广泛用于Transformer。(Widely used in transformers.)
+- **Transformer中的用例**:
+  - 语言建模(GPT-3, BERT)。(Language modeling, e.g., GPT-3, BERT.)
+  - 蛋白质建模(AlphaFold)。(Protein modeling, e.g., AlphaFold.)
+  - 视觉Transformer (ViT)。(Vision Transformers, ViT.)
+
+---
+
+**Case study: ViTs**
+
+- **定义**: 基于自注意力的CNN替代方案。(An alternative to CNNs based on self-attention.)
+- **特点**: 将输入图像分割为“tokens”，如同NLP模型的词。(Split input image into "tokens," similar to words in NLP.)
+
+---
+
+**Self-attention operations**
+
+- **操作步骤**:
+  1. 每个token生成查询(query)、键(key)和值(value)向量。(Generate query, key, and value vectors for each token.)
+  2. 使用查询和键计算每对token的相关性。(Use query and key to compute relevance for each token pair.)
+  3. 归一化相关性以得到注意力值。(Normalize relevance to get attention values.)
+  4. 使用注意力值加权平均值向量以生成输出。(Use attention to average value vectors for output.)
+
+---
+
+**Attention matrix**
+
+- **公式**:
+  - 查询和键计算相关性矩阵：$$A = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_k}}\right)$$。(Calculate relevance as $$A = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_k}}\right)$$.)
+  - 使用值和相关性生成输出：$$\text{SA}(Q,K,V) = AV$$。(Generate output as $$\text{SA}(Q,K,V) = AV$$.)
+
+---
+
+**Complete architecture**
+
+- **特点**:
+  - ViTs由多层自注意力组成，之间插入全连接层。(ViTs consist of many self-attention layers with fully-connected layers in between.)
+  - 使用类token生成最终输出。(Use class token to produce final output.)
+
+---
+
+**Raw attention**
+
+- **定义**: 将高注意力区域视为重要特征。(Define important features as those with high attention.)
+- **方法**:
+  - 检查每一层的注意力，特别是对类token的注意力。(Examine attention at each layer, especially for the class token.)
+
+---
+
+**Attention rollout**
+
+- **问题**: 每层的token间信息会混合。(Information mixes between tokens at each layer.)
+- **解决方案**:
+  - 将注意力视为图，计算其传播路径。(Treat attention as a graph and calculate its flow.)
+  - 提取传播路径中的类token行。(Extract class token row from the rollout matrix.)
+
+---
+
+**Examples**
+
+- **用途**:
+  - 使用注意力可视化深度学习模型的重要特征。(Use attention to visualize important features in deep learning models.)
+  - 示例包括BERT、ViTs等的注意力分布。(Examples include attention distributions in BERT, ViTs, etc.)
+
+---
+
+**Attention skepticism**
+
+- **疑问**:
+  - 注意力是否真正反映了特征重要性？(Does attention truly reflect feature importance?)
+  - 注意力可能与人类关注不同。(Attention may differ from human attention.)
+- **研究**: 一些论文探讨注意力的解释性问题。(Several papers explore skepticism about attention's interpretability.)
+
+---
+
+**Remarks**
+
+- **优点**:
+  - 注意力自动计算，便于预测。(Attention is automatically calculated for prediction.)
+  - 提供直观的特征加权机制。(Provides intuitive feature weighting.)
+- **缺点**:
+  - 不易聚合不同层间的注意力。(Not easy to aggregate attention across layers.)
+  - 可能忽略重要特征。(May ignore other important operations.)
+
+---
+
+**Summary**
+
+- **发展**:
+  - 全局平均池化和自注意力最初为提高预测性能而引入。(Global average pooling and self-attention were introduced to improve predictive performance.)
+  - 后来被用于提升模型解释性。(Later used to improve model interpretability.)
+- **扩展**: 其他方法也被用于提升深度学习模型的可解释性。(Other approaches explicitly aim to make deep learning models more interpretable.)
+
+---
+
+**Perspective**
+
+- **观点**:
+  - 没有绝对“错误”的方法，但某些方法可能不符合用户需求。(No method is "wrong," but some may misalign with user needs.)
+  - 度量标准应根据用户目标设计。(Metrics should be designed for specific user objectives.)
 
 
 
